@@ -30,7 +30,7 @@ namespace Bloxstrap.Utility
 
                 _loadStatus = AssemblyLoadStatus.Failed;
 
-                Frontend.ShowMessageBox(
+                Controls.ShowMessageBox(
                     $"{App.ProjectName} was unable to create shortcuts for the Desktop and Start menu. They will be created the next time Roblox is launched.",
                     MessageBoxImage.Information
                 );

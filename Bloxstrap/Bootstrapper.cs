@@ -11,7 +11,7 @@ namespace Bloxstrap
     {
         #region Properties
         private const int ProgressBarMaximum = 10000;
-      
+
         private const string AppSettings =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
             "<Settings>\r\n" +
@@ -26,6 +26,7 @@ namespace Bloxstrap
         private string _playerFileName => _launchMode == LaunchMode.Player ? "RobloxPlayerBeta.exe" : "RobloxStudioBeta.exe";
         // TODO: change name
         private string _playerLocation => Path.Combine(_versionFolder, _playerFileName);
+        private string _playerModFolder => _launchMode != LaunchMode.Player ? Paths.StudioModifications : Paths.PlayerModifications;
 
         private string _launchCommandLine;
         private LaunchMode _launchMode;
@@ -42,7 +43,7 @@ namespace Bloxstrap
                 if (_launchMode == LaunchMode.Player)
                     App.State.Prop.PlayerVersionGuid = value;
                 else
-                   App.State.Prop.StudioVersionGuid = value;
+                    App.State.Prop.StudioVersionGuid = value;
             }
         }
 
@@ -59,6 +60,22 @@ namespace Bloxstrap
                     App.State.Prop.PlayerSize = value;
                 else
                     App.State.Prop.StudioSize = value;
+            }
+        }
+
+        private List<string> _modManifest
+        {
+            get
+            {
+                return _launchMode == LaunchMode.Studio ? App.State.Prop.StudioModManifest : App.State.Prop.PlayerModManifest;
+            }
+
+            set
+            {
+                if (_launchMode == LaunchMode.Studio)
+                    App.State.Prop.StudioModManifest = value;
+                else
+                    App.State.Prop.PlayerModManifest = value;
             }
         }
 
@@ -157,7 +174,7 @@ namespace Bloxstrap
                 else if (ex.GetType() == typeof(AggregateException))
                     ex = ex.InnerException!;
 
-                Frontend.ShowConnectivityDialog("Roblox", message, ex);
+                Controls.ShowConnectivityDialog("Roblox", message, ex);
 
                 App.Terminate(ErrorCode.ERROR_CANCELLED);
             }
@@ -250,10 +267,32 @@ namespace Bloxstrap
             }
             catch (HttpResponseException ex)
             {
-                if (ex.ResponseMessage.StatusCode != HttpStatusCode.NotFound)
+                // If channel does not exist
+                if (ex.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Reverting enrolled channel to {RobloxDeployment.DefaultChannel} because a WindowsPlayer build does not exist for {App.Settings.Prop.Channel}");
+                }
+                // If channel is not available to the user (private/internal release channel)
+                else if (ex.ResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Reverting enrolled channel to {RobloxDeployment.DefaultChannel} because {App.Settings.Prop.Channel} is restricted for public use.");
+                 
+                    // Only prompt if user has channel switching mode set to something other than Automatic.
+                    if (App.Settings.Prop.ChannelChangeMode != ChannelChangeMode.Automatic)
+                    {
+                        Controls.ShowMessageBox(
+                            $"The channel you're currently on ({App.Settings.Prop.Channel}) has now been restricted from public use. You will now be on the default channel ({RobloxDeployment.DefaultChannel}).",
+                            MessageBoxImage.Information
+                        );
+                    }
+                }
+                else
+                {
                     throw;
+                }
 
                 App.Logger.WriteLine(LOG_IDENT, $"Reverting enrolled channel to {RobloxDeployment.DefaultChannel} because a {binaryType} build does not exist for {App.Settings.Prop.Channel}");
+
                 App.Settings.Prop.Channel = RobloxDeployment.DefaultChannel;
                 clientVersion = await RobloxDeployment.GetInfo(App.Settings.Prop.Channel, binaryType: binaryType);
             }
@@ -262,7 +301,7 @@ namespace Bloxstrap
             {
                 MessageBoxResult action = App.Settings.Prop.ChannelChangeMode switch
                 {
-                    ChannelChangeMode.Prompt => Frontend.ShowMessageBox(
+                    ChannelChangeMode.Prompt => Controls.ShowMessageBox(
                         string.Format(Resources.Strings.Bootstrapper_ChannelOutOfDate, App.Settings.Prop.Channel, RobloxDeployment.DefaultChannel),
                         MessageBoxImage.Warning,
                         MessageBoxButton.YesNo
@@ -301,7 +340,7 @@ namespace Bloxstrap
 
             if (!File.Exists(Path.Combine(Paths.System, "mfplat.dll")))
             {
-                Frontend.ShowMessageBox(
+                Controls.ShowMessageBox(
                     Resources.Strings.Bootstrapper_WMFNotFound, 
                     MessageBoxImage.Error
                 );
@@ -367,10 +406,9 @@ namespace Bloxstrap
             }
 
             if (App.Settings.Prop.EnableActivityTracking && _launchMode == LaunchMode.Player)
-              App.NotifyIcon?.SetProcessId(gameClientPid);
-
-            if (App.Settings.Prop.EnableActivityTracking)
             {
+                App.NotifyIcon?.SetProcessId(gameClientPid);
+
                 activityWatcher = new();
                 shouldWait = true;
 
@@ -545,6 +583,13 @@ namespace Bloxstrap
             ProtocolHandler.RegisterExtension(".rbxl");
             ProtocolHandler.RegisterExtension(".rbxlx");
 
+            // in case the user is reinstalling
+            if (File.Exists(Paths.Application) && App.IsFirstRun)
+            {
+                Filesystem.AssertReadOnly(Paths.Application);
+                File.Delete(Paths.Application);
+            }
+
             if (Environment.ProcessPath is not null && Environment.ProcessPath != Paths.Application)
             {
                 // in case the user is reinstalling
@@ -674,7 +719,7 @@ namespace Bloxstrap
                 App.Logger.WriteLine(LOG_IDENT, "An exception occurred when running the auto-updater");
                 App.Logger.WriteException(LOG_IDENT, ex);
 
-                Frontend.ShowMessageBox(
+                Controls.ShowMessageBox(
                     string.Format(Resources.Strings.Bootstrapper_AutoUpdateFailed, releaseInfo.TagName),
                     MessageBoxImage.Information
                 );
@@ -690,7 +735,7 @@ namespace Bloxstrap
             {
                 App.Logger.WriteLine(LOG_IDENT, $"Prompting to shut down all open Roblox instances");
                 
-                MessageBoxResult result = Frontend.ShowMessageBox(
+                MessageBoxResult result = Controls.ShowMessageBox(
                     Resources.Strings.Bootstrapper_Uninstall_RobloxRunning,
                     MessageBoxImage.Information,
                     MessageBoxButton.OKCancel
@@ -783,7 +828,8 @@ namespace Bloxstrap
             if (cautiousUninstall)
             {
                 cleanupSequence.Add(() => Directory.Delete(Paths.Downloads, true));
-                cleanupSequence.Add(() => Directory.Delete(Paths.Modifications, true));
+                cleanupSequence.Add(() => Directory.Delete(Paths.PlayerModifications, true));
+                cleanupSequence.Add(() => Directory.Delete(Paths.StudioModifications, true));
                 cleanupSequence.Add(() => Directory.Delete(Paths.Versions, true));
                 cleanupSequence.Add(() => Directory.Delete(Paths.Logs, true));
                 
@@ -864,7 +910,7 @@ namespace Bloxstrap
             
             if (Filesystem.GetFreeDiskSpace(Paths.Base) < totalSizeRequired)
             {
-                Frontend.ShowMessageBox(
+                Controls.ShowMessageBox(
                     Resources.Strings.Bootstrapper_NotEnoughSpace, 
                     MessageBoxImage.Error
                 );
@@ -1059,7 +1105,7 @@ namespace Bloxstrap
 
             if (File.Exists(injectorLocation))
             {
-                Frontend.ShowMessageBox(
+                Controls.ShowMessageBox(
                     Resources.Strings.Bootstrapper_HyperionUpdateInfo,
                     MessageBoxImage.Warning
                 );
@@ -1069,6 +1115,10 @@ namespace Bloxstrap
 
             if (File.Exists(configLocation))
                 File.Delete(configLocation);
+
+            // local - modifications to player modifications
+            if (Directory.Exists(Paths.Modifications))
+                Directory.Move(Paths.Modifications, Paths.PlayerModifications);
         }
 
         private async Task ApplyModifications()
@@ -1133,8 +1183,11 @@ namespace Bloxstrap
 
             List<string> modFolderFiles = new();
 
-            if (!Directory.Exists(Paths.Modifications))
-                Directory.CreateDirectory(Paths.Modifications);
+            if (!Directory.Exists(Paths.PlayerModifications))
+                Directory.CreateDirectory(Paths.PlayerModifications);
+
+            if (!Directory.Exists(Paths.StudioModifications))
+                Directory.CreateDirectory(Paths.StudioModifications);
 
             bool appDisabled = App.Settings.Prop.UseDisableAppPatch && !_launchCommandLine.Contains("--deeplink");
 
@@ -1166,11 +1219,13 @@ namespace Bloxstrap
             });
 
             // Mobile.rbxl
-            await CheckModPreset(appDisabled, @"ExtraContent\places\Mobile.rbxl", "");
-            await CheckModPreset(App.Settings.Prop.UseOldAvatarBackground && !appDisabled, @"ExtraContent\places\Mobile.rbxl", "OldAvatarBackground.rbxl");
+            if (_launchMode == LaunchMode.Player) {
+                await CheckModPreset(appDisabled, @"ExtraContent\places\Mobile.rbxl", "");
+                await CheckModPreset(App.Settings.Prop.UseOldAvatarBackground && !appDisabled, @"ExtraContent\places\Mobile.rbxl", "OldAvatarBackground.rbxl");
+            }
 
             // emoji presets are downloaded remotely from github due to how large they are
-            string contentFonts = Path.Combine(Paths.Modifications, "content\\fonts");
+            string contentFonts = Path.Combine(_playerModFolder, "content\\fonts");
             string emojiFontLocation = Path.Combine(contentFonts, "TwemojiMozilla.ttf");
             string emojiFontHash = File.Exists(emojiFontLocation) ? MD5Hash.FromFile(emojiFontLocation) : "";
 
@@ -1197,7 +1252,7 @@ namespace Bloxstrap
             // check custom font mod
             // instead of replacing the fonts themselves, we'll just alter the font family manifests
 
-            string modFontFamiliesFolder = Path.Combine(Paths.Modifications, "content\\fonts\\families");
+            string modFontFamiliesFolder = Path.Combine(_playerModFolder, "content\\fonts\\families");
 
             if (App.IsFirstRun && App.CustomFontLocation is not null)
             {
@@ -1239,10 +1294,10 @@ namespace Bloxstrap
                 Directory.Delete(modFontFamiliesFolder, true);
             }
 
-            foreach (string file in Directory.GetFiles(Paths.Modifications, "*.*", SearchOption.AllDirectories))
+            foreach (string file in Directory.GetFiles(_playerModFolder, "*.*", SearchOption.AllDirectories))
             {
                 // get relative directory path
-                string relativeFile = file.Substring(Paths.Modifications.Length + 1);
+                string relativeFile = file.Substring(_playerModFolder.Length + 1);
 
                 // v1.7.0 - README has been moved to the preferences menu now
                 if (relativeFile == "README.txt")
@@ -1256,7 +1311,7 @@ namespace Bloxstrap
 
                 modFolderFiles.Add(relativeFile);
 
-                string fileModFolder = Path.Combine(Paths.Modifications, relativeFile);
+                string fileModFolder = Path.Combine(_playerModFolder, relativeFile);
                 string fileVersionFolder = Path.Combine(_versionFolder, relativeFile);
 
                 if (File.Exists(fileVersionFolder) && MD5Hash.FromFile(fileModFolder) == MD5Hash.FromFile(fileVersionFolder))
@@ -1277,7 +1332,7 @@ namespace Bloxstrap
             // the manifest is primarily here to keep track of what files have been
             // deleted from the modifications folder, so that we know when to restore the original files from the downloaded packages
             // now check for files that have been deleted from the mod folder according to the manifest
-            foreach (string fileLocation in App.State.Prop.ModManifest)
+            foreach (string fileLocation in _modManifest)
             {
                 if (modFolderFiles.Contains(fileLocation))
                     continue;
@@ -1304,17 +1359,17 @@ namespace Bloxstrap
                 App.Logger.WriteLine(LOG_IDENT, $"{fileLocation} was removed as a mod, restored from {package.Key}");
             }
 
-            App.State.Prop.ModManifest = modFolderFiles;
+            _modManifest = modFolderFiles;
             App.State.Save();
 
             App.Logger.WriteLine(LOG_IDENT, $"Finished checking file mods");
         }
 
-        private static async Task CheckModPreset(bool condition, string location, string name)
+        private async Task CheckModPreset(bool condition, string location, string name)
         {
             string LOG_IDENT = $"Bootstrapper::CheckModPreset.{name}";
 
-            string fullLocation = Path.Combine(Paths.Modifications, location);
+            string fullLocation = Path.Combine(_playerModFolder, location);
             string fileHash = File.Exists(fullLocation) ? MD5Hash.FromFile(fullLocation) : "";
 
             if (!condition && fileHash == "")
@@ -1332,12 +1387,12 @@ namespace Bloxstrap
                     Filesystem.AssertReadOnly(fullLocation);
                     File.Delete(fullLocation);
                 }
-                
+                    
                 return;
             }
 
             if (fileHash != embeddedHash)
-            {       
+            {
                 App.Logger.WriteLine(LOG_IDENT, $"Writing '{location}' as preset is enabled, and mod file does not exist or does not match preset");
 
                 Directory.CreateDirectory(Path.GetDirectoryName(fullLocation)!);
@@ -1352,7 +1407,7 @@ namespace Bloxstrap
             }
         }
 
-        private static async Task CheckModPreset(bool condition, Dictionary<string, string> mapping)
+        private async Task CheckModPreset(bool condition, Dictionary<string, string> mapping)
         {
             foreach (var pair in mapping)
                 await CheckModPreset(condition, pair.Key, pair.Value);

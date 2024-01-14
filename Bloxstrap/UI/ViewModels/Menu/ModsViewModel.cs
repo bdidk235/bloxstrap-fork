@@ -9,7 +9,7 @@ namespace Bloxstrap.UI.ViewModels.Menu
 {
     public class ModsViewModel : NotifyPropertyChangedViewModel
     {
-        private void OpenModsFolder() => Process.Start("explorer.exe", Paths.Modifications);
+        private void OpenModsFolder() => Process.Start("explorer.exe", Paths.PlayerModifications);
 
         private bool _usingCustomFont => App.IsFirstRun && App.CustomFontLocation is not null || !App.IsFirstRun && File.Exists(Paths.CustomFont);
 

@@ -97,7 +97,7 @@ namespace Bloxstrap
             _showingExceptionDialog = true;
 
             if (!IsQuiet)
-                Frontend.ShowExceptionDialog(exception);
+                Controls.ShowExceptionDialog(exception);
 
             Terminate(ErrorCode.ERROR_INSTALL_FAILURE);
 #endif
@@ -212,12 +212,12 @@ namespace Bloxstrap
                 else
                 {
                     if (Process.GetProcessesByName(ProjectName).Length > 1 && !IsQuiet)
-                        Frontend.ShowMessageBox(
+                        Controls.ShowMessageBox(
                             Bloxstrap.Resources.Strings.Menu_AlreadyRunning, 
                             MessageBoxImage.Information
                         );
 
-                    Frontend.ShowMenu();
+                    Controls.ShowMenu();
                 }
             }
             else if (LaunchArgs.Length > 0)
@@ -231,7 +231,7 @@ namespace Bloxstrap
                 else if (LaunchArgs[0].StartsWith("roblox:"))
                 {
                     if (Settings.Prop.UseDisableAppPatch)
-                        Frontend.ShowMessageBox(
+                        Controls.ShowMessageBox(
                             Bloxstrap.Resources.Strings.Bootstrapper_DeeplinkTempEnabled, 
                             MessageBoxImage.Information
                         );
@@ -257,10 +257,11 @@ namespace Bloxstrap
                 }
                 else if (LaunchArgs[0] == "-ide")
                 {
-                    launchMode = LaunchMode.Studio;
-
+                    commandLine = "-startEvent www.roblox.com/robloxQTStudioStartedEvent";
                     if (LaunchArgs.Length >= 2)
                         commandLine = $"-task EditFile -localPlaceFile \"{LaunchArgs[1]}\"";
+
+                    launchMode = LaunchMode.Studio;
                 }
                 else
                 {

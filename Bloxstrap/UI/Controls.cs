@@ -6,7 +6,7 @@ using Bloxstrap.UI.Elements.Menu;
 
 namespace Bloxstrap.UI
 {
-    static class Frontend
+    static class Controls
     {
         public static void ShowMenu() => new MainWindow().ShowDialog();
 

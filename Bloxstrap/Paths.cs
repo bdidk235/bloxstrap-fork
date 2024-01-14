@@ -18,10 +18,12 @@
         public static string Integrations { get; private set; } = "";
         public static string Versions { get; private set; } = "";
         public static string Modifications { get; private set; } = "";
+        public static string PlayerModifications { get; private set; } = "";
+        public static string StudioModifications { get; private set; } = "";
 
         public static string Application { get; private set; } = "";
 
-        public static string CustomFont => Path.Combine(Modifications, "content\\fonts\\CustomFont.ttf");
+        public static string CustomFont => Path.Combine(PlayerModifications, "content\\fonts\\CustomFont.ttf");
 
         public static bool Initialized => !String.IsNullOrEmpty(Base);
 
@@ -33,6 +35,8 @@
             Integrations = Path.Combine(Base, "Integrations");
             Versions = Path.Combine(Base, "Versions");
             Modifications = Path.Combine(Base, "Modifications");
+            PlayerModifications = Path.Combine(Base, "PlayerModifications");
+            StudioModifications = Path.Combine(Base, "StudioModifications");
 
             Application = Path.Combine(Base, $"{App.ProjectName}.exe");
 

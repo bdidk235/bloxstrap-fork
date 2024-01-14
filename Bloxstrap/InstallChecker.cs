@@ -32,7 +32,7 @@ namespace Bloxstrap
 
                 _installLocation = Path.GetDirectoryName(Paths.Process)!;
 
-                var result = Frontend.ShowMessageBox(
+                var result = Controls.ShowMessageBox(
                     string.Format(Resources.Strings.InstallChecker_NotInstalledProperly, _installLocation), 
                     MessageBoxImage.Warning, 
                     MessageBoxButton.YesNo
@@ -74,7 +74,7 @@ namespace Bloxstrap
                 {
                     App.Logger.WriteLine(LOG_IDENT, $"Drive has changed from {driveName} to {newDriveName}");
 
-                    Frontend.ShowMessageBox(
+                    Controls.ShowMessageBox(
                         string.Format(Resources.Strings.InstallChecker_DriveLetterChangeDetected, driveName, newDriveName),
                         MessageBoxImage.Warning,
                         MessageBoxButton.OK
@@ -87,7 +87,7 @@ namespace Bloxstrap
                 {
                     App.Logger.WriteLine(LOG_IDENT, $"Drive {driveName} does not exist anymore, and has likely been removed");
 
-                    var result = Frontend.ShowMessageBox(
+                    var result = Controls.ShowMessageBox(
                         string.Format(Resources.Strings.InstallChecker_InstallDriveMissing, driveName),
                         MessageBoxImage.Warning,
                         MessageBoxButton.OKCancel
@@ -130,7 +130,7 @@ namespace Bloxstrap
             App.IsSetupComplete = false;
 
             App.FastFlags.Load();
-            Frontend.ShowMenu();
+            Controls.ShowMenu();
 
             // exit if we don't click the install button on installation
             if (App.IsSetupComplete)
@@ -165,7 +165,7 @@ namespace Bloxstrap
             }
             else
             {
-                result = Frontend.ShowMessageBox(
+                result = Controls.ShowMessageBox(
                     Resources.Strings.InstallChecker_VersionDifferentThanInstalled,
                     MessageBoxImage.Question,
                     MessageBoxButton.YesNo
@@ -227,6 +227,16 @@ namespace Bloxstrap
 
                     App.FastFlags.Save();
                 }
+                else if (existingVersionInfo.ProductVersion == "2.5.3")
+                {
+                    App.FastFlags.SetValue("FFlagDebugGraphicsPreferD3D11", null);
+                    App.FastFlags.SetValue("FFlagDebugGraphicsPreferD3D11FL10", null);
+                    App.FastFlags.SetValue("FFlagDebugGraphicsPreferVulkan", null);
+                    App.FastFlags.SetValue("FFlagRenderVulkanFixMinimizeWindow", null);
+                    App.FastFlags.SetValue("FFlagDebugGraphicsPreferOpenGL", null);
+
+                    App.FastFlags.Save();
+                }
             }
 
             if (isAutoUpgrade)
@@ -240,13 +250,13 @@ namespace Bloxstrap
             }
             else if (!App.IsQuiet)
             {
-                Frontend.ShowMessageBox(
+                Controls.ShowMessageBox(
                     string.Format(Resources.Strings.InstallChecker_Updated, currentVersionInfo.ProductVersion),
                     MessageBoxImage.Information,
                     MessageBoxButton.OK
                 );
 
-                Frontend.ShowMenu();
+                Controls.ShowMenu();
 
                 App.Terminate();
             }

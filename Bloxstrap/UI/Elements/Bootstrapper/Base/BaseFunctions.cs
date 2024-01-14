@@ -6,7 +6,7 @@ namespace Bloxstrap.UI.Elements.Bootstrapper.Base
     {
         public static void ShowSuccess(string message, Action? callback)
         {
-            Frontend.ShowMessageBox(message, MessageBoxImage.Information);
+            Controls.ShowMessageBox(message, MessageBoxImage.Information);
 
             if (callback is not null)
                 callback();

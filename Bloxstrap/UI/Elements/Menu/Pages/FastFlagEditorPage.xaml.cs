@@ -122,7 +122,7 @@ namespace Bloxstrap.UI.Elements.Menu.Pages
 
                     if (App.FastFlags.GetValue(newName) is not null)
                     {
-                        Frontend.ShowMessageBox("A FastFlag with this name already exists.", MessageBoxImage.Information);
+                        Controls.ShowMessageBox("A FastFlag with this name already exists.", MessageBoxImage.Information);
                         e.Cancel = true;
                         textbox.Text = oldName;
                         return;
@@ -181,7 +181,7 @@ namespace Bloxstrap.UI.Elements.Menu.Pages
             }
             else
             {
-                Frontend.ShowMessageBox("An entry for this FastFlag already exists.", MessageBoxImage.Information);
+                Controls.ShowMessageBox("An entry for this FastFlag already exists.", MessageBoxImage.Information);
 
                 bool refresh = false;
 
@@ -263,7 +263,7 @@ namespace Bloxstrap.UI.Elements.Menu.Pages
                 }
                 catch (Exception ex) 
                 {
-                    Frontend.ShowMessageBox(
+                    Controls.ShowMessageBox(
                         "The JSON you've entered does not appear to be valid. Please double check it and try again.\n" +
                         "\n" +
                         "More information:\n" +
@@ -288,7 +288,7 @@ namespace Bloxstrap.UI.Elements.Menu.Pages
                 if (count > 25)
                     message += "...";
 
-                var result = Frontend.ShowMessageBox(message, MessageBoxImage.Question, MessageBoxButton.YesNo);
+                var result = Controls.ShowMessageBox(message, MessageBoxImage.Question, MessageBoxButton.YesNo);
 
                 overwriteConflicting = result == MessageBoxResult.Yes;
             }

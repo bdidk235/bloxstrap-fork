@@ -90,7 +90,7 @@ namespace Bloxstrap
                 if (channel == App.State.Prop.LastEnrolledChannel)
                     return;
 
-                MessageBoxResult result = Frontend.ShowMessageBox(
+                MessageBoxResult result = Controls.ShowMessageBox(
                     string.Format(Resources.Strings.ProtocolHandler_RobloxSwitchedChannel, channel, App.Settings.Prop.Channel),
                     MessageBoxImage.Question,
                     MessageBoxButton.YesNo
@@ -136,7 +136,7 @@ namespace Bloxstrap
         {
             const string keyValue = "Roblox Place";
             string handlerArgs = $"\"{handler}\" -ide \"%1\"";
-            string iconValue = $"{handler},0";
+            string iconValue = $"D:\\Source\\Bloxstrap\\Bloxstrap\\Studio.ico,0";
 
             using RegistryKey uriKey = Registry.CurrentUser.CreateSubKey(@"Software\Classes\" + RobloxPlaceKey);
             using RegistryKey uriIconKey = uriKey.CreateSubKey("DefaultIcon");
