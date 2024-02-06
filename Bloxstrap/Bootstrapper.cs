@@ -265,29 +265,29 @@ namespace Bloxstrap
             {
                 // If channel does not exist
                 if (ex.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
                     App.Logger.WriteLine(LOG_IDENT, $"Reverting enrolled channel to {RobloxDeployment.DefaultChannel} because a WindowsPlayer build does not exist for {App.Settings.Prop.Channel}");
-                }
                 // If channel is not available to the user (private/internal release channel)
                 else if (ex.ResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    App.Logger.WriteLine(LOG_IDENT, $"Reverting enrolled channel to {RobloxDeployment.DefaultChannel} because {App.Settings.Prop.Channel} is restricted for public use.");
-
+                    App.Logger.WriteLine(LOG_IDENT, $"Channel {App.Settings.Prop.Channel} is unavailable to the user.");
                     // Only prompt if user has channel switching mode set to something other than Automatic.
                     if (App.Settings.Prop.ChannelChangeMode != ChannelChangeMode.Automatic)
                     {
-                        Frontend.ShowMessageBox(
-                            $"The channel you're currently on ({App.Settings.Prop.Channel}) has now been restricted from public use. You will now be on the default channel ({RobloxDeployment.DefaultChannel}).",
-                            MessageBoxImage.Information
-                        );
-                    }
-                }
-                else
-                {
-                    throw;
-                }
+                        MessageBoxResult channelChangeResult = Controls.ShowMessageBox(
+                            $"Release channel {App.Settings.Prop.Channel} is not available to you. Would you like to reset to {RobloxDeployment.DefaultChannel}?",
+                            MessageBoxImage.Warning,
+                            MessageBoxButton.YesNo);
 
-                App.Logger.WriteLine(LOG_IDENT, $"Reverting enrolled channel to {RobloxDeployment.DefaultChannel} because a {binaryType} build does not exist for {App.Settings.Prop.Channel}");
+                        if (channelChangeResult != MessageBoxResult.Yes)
+                        {
+                            Controls.ShowMessageBox($"Client cannot be launched as you are enrolled into an unavailable release channel and refused to reset.", MessageBoxImage.Error);
+                            App.Logger.WriteLine(LOG_IDENT, $"User refused to reset channel. Aborting.");
+                            App.Terminate(ErrorCode.ERROR_CANCELLED);
+                        }
+                    }
+                    App.Logger.WriteLine(LOG_IDENT, $"Resetting release channel to {RobloxDeployment.DefaultChannel} as {App.Settings.Prop.Channel} is unavailable to the user.");
+                }
+                else throw;
 
                 App.Settings.Prop.Channel = RobloxDeployment.DefaultChannel;
                 clientVersion = await RobloxDeployment.GetInfo(App.Settings.Prop.Channel, binaryType: binaryType);
