@@ -1,5 +1,6 @@
+
 ## Fork Changes
-* The `Modifications` folder is replaced with `PlayerModifications`, with a `StudioModifications` folder. (Only `PlayerModifications` can be modified by Bloxstrap Menu, `StudioModifications` must be modified manually.)
+* The `Modifications` folder is replaced with `PlayerModifications`, and a `StudioModifications` folder is created. (Only `PlayerModifications` can be modified by Bloxstrap Menu, `StudioModifications` must be modified manually.)
 
 # <img src="https://github.com/pizzaboxer/bloxstrap/raw/main/Images/Bloxstrap.png" width="48"/> Bloxstrap
 [![License](https://img.shields.io/github/license/pizzaboxer/bloxstrap)](https://github.com/pizzaboxer/bloxstrap/blob/main/LICENSE)
