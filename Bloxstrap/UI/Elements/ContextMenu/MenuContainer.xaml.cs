@@ -126,7 +126,7 @@ namespace Bloxstrap.UI.Elements.ContextMenu
 
         private void CloseRobloxMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = Controls.ShowMessageBox(
+            MessageBoxResult result = Frontend.ShowMessageBox(
                 Bloxstrap.Resources.Strings.ContextMenu_CloseRobloxMessage,
                 MessageBoxImage.Warning,
                 MessageBoxButton.YesNo
@@ -136,7 +136,7 @@ namespace Bloxstrap.UI.Elements.ContextMenu
                 return;
 
             using Process process = Process.GetProcessById((int)_processId!);
-            process.CloseMainWindow();
+            process.Kill();
             process.Close();
         }
     }

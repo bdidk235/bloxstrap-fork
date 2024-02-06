@@ -11,7 +11,7 @@ namespace Bloxstrap
     {
         #region Properties
         private const int ProgressBarMaximum = 10000;
-
+      
         private const string AppSettings =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
             "<Settings>\r\n" +
@@ -43,7 +43,7 @@ namespace Bloxstrap
                 if (_launchMode == LaunchMode.Player)
                     App.State.Prop.PlayerVersionGuid = value;
                 else
-                    App.State.Prop.StudioVersionGuid = value;
+                   App.State.Prop.StudioVersionGuid = value;
             }
         }
 
@@ -116,10 +116,6 @@ namespace Bloxstrap
 
             message = message.Replace("{product}", productName);
 
-            // yea idk
-            if (App.Settings.Prop.BootstrapperStyle == BootstrapperStyle.ByfronDialog)
-                message = message.Replace("...", "");
-
             if (Dialog is not null)
                 Dialog.Message = message;
         }
@@ -174,7 +170,7 @@ namespace Bloxstrap
                 else if (ex.GetType() == typeof(AggregateException))
                     ex = ex.InnerException!;
 
-                Controls.ShowConnectivityDialog("Roblox", message, ex);
+                Frontend.ShowConnectivityDialog("Roblox", message, ex);
 
                 App.Terminate(ErrorCode.ERROR_CANCELLED);
             }
@@ -276,11 +272,11 @@ namespace Bloxstrap
                 else if (ex.ResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     App.Logger.WriteLine(LOG_IDENT, $"Reverting enrolled channel to {RobloxDeployment.DefaultChannel} because {App.Settings.Prop.Channel} is restricted for public use.");
-                 
+
                     // Only prompt if user has channel switching mode set to something other than Automatic.
                     if (App.Settings.Prop.ChannelChangeMode != ChannelChangeMode.Automatic)
                     {
-                        Controls.ShowMessageBox(
+                        Frontend.ShowMessageBox(
                             $"The channel you're currently on ({App.Settings.Prop.Channel}) has now been restricted from public use. You will now be on the default channel ({RobloxDeployment.DefaultChannel}).",
                             MessageBoxImage.Information
                         );
@@ -301,7 +297,7 @@ namespace Bloxstrap
             {
                 MessageBoxResult action = App.Settings.Prop.ChannelChangeMode switch
                 {
-                    ChannelChangeMode.Prompt => Controls.ShowMessageBox(
+                    ChannelChangeMode.Prompt => Frontend.ShowMessageBox(
                         string.Format(Resources.Strings.Bootstrapper_ChannelOutOfDate, App.Settings.Prop.Channel, RobloxDeployment.DefaultChannel),
                         MessageBoxImage.Warning,
                         MessageBoxButton.YesNo
@@ -340,7 +336,7 @@ namespace Bloxstrap
 
             if (!File.Exists(Path.Combine(Paths.System, "mfplat.dll")))
             {
-                Controls.ShowMessageBox(
+                Frontend.ShowMessageBox(
                     Resources.Strings.Bootstrapper_WMFNotFound, 
                     MessageBoxImage.Error
                 );
@@ -583,13 +579,6 @@ namespace Bloxstrap
             ProtocolHandler.RegisterExtension(".rbxl");
             ProtocolHandler.RegisterExtension(".rbxlx");
 
-            // in case the user is reinstalling
-            if (File.Exists(Paths.Application) && App.IsFirstRun)
-            {
-                Filesystem.AssertReadOnly(Paths.Application);
-                File.Delete(Paths.Application);
-            }
-
             if (Environment.ProcessPath is not null && Environment.ProcessPath != Paths.Application)
             {
                 // in case the user is reinstalling
@@ -719,7 +708,7 @@ namespace Bloxstrap
                 App.Logger.WriteLine(LOG_IDENT, "An exception occurred when running the auto-updater");
                 App.Logger.WriteException(LOG_IDENT, ex);
 
-                Controls.ShowMessageBox(
+                Frontend.ShowMessageBox(
                     string.Format(Resources.Strings.Bootstrapper_AutoUpdateFailed, releaseInfo.TagName),
                     MessageBoxImage.Information
                 );
@@ -735,7 +724,7 @@ namespace Bloxstrap
             {
                 App.Logger.WriteLine(LOG_IDENT, $"Prompting to shut down all open Roblox instances");
                 
-                MessageBoxResult result = Controls.ShowMessageBox(
+                MessageBoxResult result = Frontend.ShowMessageBox(
                     Resources.Strings.Bootstrapper_Uninstall_RobloxRunning,
                     MessageBoxImage.Information,
                     MessageBoxButton.OKCancel
@@ -748,13 +737,13 @@ namespace Bloxstrap
                 {
                     foreach (Process process in Process.GetProcessesByName(App.RobloxPlayerAppName))
                     {
-                        process.CloseMainWindow();
+                        process.Kill();
                         process.Close();
                     }
 
                     foreach (Process process in Process.GetProcessesByName(App.RobloxStudioAppName))
                     {
-                        process.CloseMainWindow();
+                        process.Kill();
                         process.Close();
                     }
                 }
@@ -910,7 +899,7 @@ namespace Bloxstrap
             
             if (Filesystem.GetFreeDiskSpace(Paths.Base) < totalSizeRequired)
             {
-                Controls.ShowMessageBox(
+                Frontend.ShowMessageBox(
                     Resources.Strings.Bootstrapper_NotEnoughSpace, 
                     MessageBoxImage.Error
                 );
@@ -1105,7 +1094,7 @@ namespace Bloxstrap
 
             if (File.Exists(injectorLocation))
             {
-                Controls.ShowMessageBox(
+                Frontend.ShowMessageBox(
                     Resources.Strings.Bootstrapper_HyperionUpdateInfo,
                     MessageBoxImage.Warning
                 );
@@ -1387,12 +1376,12 @@ namespace Bloxstrap
                     Filesystem.AssertReadOnly(fullLocation);
                     File.Delete(fullLocation);
                 }
-                    
+                
                 return;
             }
 
             if (fileHash != embeddedHash)
-            {
+            {       
                 App.Logger.WriteLine(LOG_IDENT, $"Writing '{location}' as preset is enabled, and mod file does not exist or does not match preset");
 
                 Directory.CreateDirectory(Path.GetDirectoryName(fullLocation)!);

@@ -12,7 +12,7 @@
         public int PlayerSize { get; set; } = 0;
         public int StudioSize { get; set; } = 0;
 
-        [Obsolete("Use PlayerModManifest instead", true)]
+        [Obsolete("Use PlayerModManifest/StudioModManifest instead", true)]
         public List<string> ModManifest { set { PlayerModManifest = value; } }
         public List<string> PlayerModManifest { get; set; } = new();
         public List<string> StudioModManifest { get; set; } = new();
