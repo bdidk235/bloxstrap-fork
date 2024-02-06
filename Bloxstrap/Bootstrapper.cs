@@ -273,14 +273,14 @@ namespace Bloxstrap
                     // Only prompt if user has channel switching mode set to something other than Automatic.
                     if (App.Settings.Prop.ChannelChangeMode != ChannelChangeMode.Automatic)
                     {
-                        MessageBoxResult channelChangeResult = Controls.ShowMessageBox(
+                        MessageBoxResult channelChangeResult = Frontend.ShowMessageBox(
                             $"Release channel {App.Settings.Prop.Channel} is not available to you. Would you like to reset to {RobloxDeployment.DefaultChannel}?",
                             MessageBoxImage.Warning,
                             MessageBoxButton.YesNo);
 
                         if (channelChangeResult != MessageBoxResult.Yes)
                         {
-                            Controls.ShowMessageBox($"Client cannot be launched as you are enrolled into an unavailable release channel and refused to reset.", MessageBoxImage.Error);
+                            Frontend.ShowMessageBox($"Client cannot be launched as you are enrolled into an unavailable release channel and refused to reset.", MessageBoxImage.Error);
                             App.Logger.WriteLine(LOG_IDENT, $"User refused to reset channel. Aborting.");
                             App.Terminate(ErrorCode.ERROR_CANCELLED);
                         }
