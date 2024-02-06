@@ -1,3 +1,6 @@
+## Fork Changes
+* The `Modifications` folder is replaced with `PlayerModifications`, with a `StudioModifications` folder. (Only `PlayerModifications` can be modified by Bloxstrap Menu, `StudioModifications` must be modified manually.)
+
 # <img src="https://github.com/pizzaboxer/bloxstrap/raw/main/Images/Bloxstrap.png" width="48"/> Bloxstrap
 [![License](https://img.shields.io/github/license/pizzaboxer/bloxstrap)](https://github.com/pizzaboxer/bloxstrap/blob/main/LICENSE)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/pizzaboxer/bloxstrap/ci.yml?branch=main&label=builds)](https://github.com/pizzaboxer/bloxstrap/actions)
@@ -5,9 +8,6 @@
 [![Version](https://img.shields.io/github/v/release/pizzaboxer/bloxstrap?color=7a39fb)](https://github.com/pizzaboxer/bloxstrap/releases/latest)
 [![Discord](https://img.shields.io/discord/1099468797410283540?logo=discord&logoColor=white&label=discord&color=4d3dff)](https://discord.gg/nKjV3mGq6R)
 [![lol](https://img.shields.io/badge/mom%20made-pizza%20rolls-orange)](https://media.tenor.com/FIkSGbGycmAAAAAd/manly-roblox.gif)
-
-## Fork Changes
-* The `Modifications` folder is replaced with `PlayerModifications`, with a `StudioModifications` folder. (Only `PlayerModifications` can be modified by Bloxstrap Menu, `StudioModifications` must be modified manually.)
 
 An open-source, feature-packed alternative bootstrapper for Roblox.
 
