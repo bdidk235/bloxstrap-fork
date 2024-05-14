@@ -142,6 +142,9 @@ Would you like to switch to the default channel ({1})?</value>
   <data name="Bootstrapper.DeeplinkTempEnabled" xml:space="preserve">
     <value>Roblox was launched via a deeplink, however the desktop app is required for deeplink launching to work. Because you've opted to disable the desktop app, it will temporarily be re-enabled for this launch only.</value>
   </data>
+  <data name="Bootstrapper.EmojiPresetFetchFailed" xml:space="preserve">
+    <value>Could not apply the {0} emoji mod preset because of a network error. To try again, please reconfigure the option in the Bloxstrap Menu.</value>
+  </data>
   <data name="Bootstrapper.FirstRunUninstall" xml:space="preserve">
     <value>You must first install Bloxstrap before uninstalling.</value>
   </data>
@@ -722,6 +725,12 @@ Would you like to upgrade your currently installed version?</value>
   <data name="Menu.FastFlagEditor.Description" xml:space="preserve">
     <value>Manage your own FastFlags. Double click a column to edit.</value>
   </data>
+  <data name="Menu.FastFlagEditor.ExportJson" xml:space="preserve">
+    <value>Export JSON</value>
+  </data>
+  <data name="Menu.FastFlagEditor.JsonCopiedToClipboard" xml:space="preserve">
+    <value>Copied JSON to clipboard.</value>
+  </data>
   <data name="Menu.FastFlagEditor.Search" xml:space="preserve">
     <value>Search</value>
   </data>
@@ -1035,6 +1044,12 @@ Selecting 'No' will ignore this warning and continue installation.</value>
   </data>
   <data name="Menu.Save" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="Menu.SettingsSaved.Message" xml:space="preserve">
+    <value>Changes will take effect the next time you launch Roblox.</value>
+  </data>
+  <data name="Menu.SettingsSaved.Title" xml:space="preserve">
+    <value>Settings saved!</value>
   </data>
   <data name="Menu.Title" xml:space="preserve">
     <value>Bloxstrap Menu</value>

@@ -134,6 +134,15 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not apply the {0} emoji mod preset because of a network error. To try again, please reconfigure the option in the Bloxstrap Menu..
+        /// </summary>
+        public static string Bootstrapper_EmojiPresetFetchFailed {
+            get {
+                return ResourceManager.GetString("Bootstrapper.EmojiPresetFetchFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must first install Bloxstrap before uninstalling..
         /// </summary>
         public static string Bootstrapper_FirstRunUninstall {
@@ -1858,6 +1867,24 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export JSON.
+        /// </summary>
+        public static string Menu_FastFlagEditor_ExportJson {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.ExportJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied JSON to clipboard..
+        /// </summary>
+        public static string Menu_FastFlagEditor_JsonCopiedToClipboard {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.JsonCopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         public static string Menu_FastFlagEditor_Search {
@@ -2769,6 +2796,24 @@ namespace Bloxstrap.Resources {
         public static string Menu_Save {
             get {
                 return ResourceManager.GetString("Menu.Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changes will take effect the next time you launch Roblox..
+        /// </summary>
+        public static string Menu_SettingsSaved_Message {
+            get {
+                return ResourceManager.GetString("Menu.SettingsSaved.Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings saved!.
+        /// </summary>
+        public static string Menu_SettingsSaved_Title {
+            get {
+                return ResourceManager.GetString("Menu.SettingsSaved.Title", resourceCulture);
             }
         }
         

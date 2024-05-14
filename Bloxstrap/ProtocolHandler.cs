@@ -9,51 +9,19 @@ namespace Bloxstrap
     {
         private const string RobloxPlaceKey = "Roblox.Place";
 
-        // map uri keys to command line args
-        private static readonly IReadOnlyDictionary<string, string> UriKeyArgMap = new Dictionary<string, string>()
-        {
-            // excluding roblox-player and launchtime
-            { "launchmode", "--" },
-            { "gameinfo", "-t " },
-            { "placelauncherurl", "-j "},
-            { "launchtime", "--launchtime=" },
-            { "browsertrackerid", "-b " },
-            { "robloxLocale", "--rloc " },
-            { "gameLocale", "--gloc " },
-            { "channel", "-channel " },
-            // studio
-            { "task", "-task " },
-            { "placeId", "-placeId " },
-            { "universeId", "-universeId " },
-            { "userId", "-userId " }
-        };
-
         public static string ParseUri(string protocol)
         {
-            string[] keyvalPair;
-            string key;
-            string val;
+            var args = new Dictionary<string, string>();
             bool channelArgPresent = false;
-
-            StringBuilder commandLine = new();
 
             foreach (var parameter in protocol.Split('+'))
             {
                 if (!parameter.Contains(':'))
                     continue;
 
-                keyvalPair = parameter.Split(':');
-                key = keyvalPair[0];
-                val = keyvalPair[1];
-
-                if (!UriKeyArgMap.ContainsKey(key) || string.IsNullOrEmpty(val))
-                    continue;
-
-                if (key == "launchmode" && val == "play")
-                    val = "app";
-
-                if (key == "placelauncherurl")
-                    val = HttpUtility.UrlDecode(val);
+                var kv = parameter.Split(':');
+                string key = kv[0];
+                string val = kv[1];
 
                 // we'll set this before launching because for some reason roblox just refuses to launch if its like a few minutes old so ???
                 if (key == "launchtime")
@@ -68,13 +36,14 @@ namespace Bloxstrap
                     continue;
                 }
 
-                commandLine.Append(UriKeyArgMap[key] + val + " ");
+                args.Add(key, val);
             }
 
             if (!channelArgPresent)
                 EnrollChannel(RobloxDeployment.DefaultChannel);
 
-            return commandLine.ToString();
+            var pairs = args.Select(x => x.Key + ":" + x.Value).ToArray();
+            return String.Join("+", pairs);
         }
 
         public static void ChangeChannel(string channel)
@@ -82,26 +51,16 @@ namespace Bloxstrap
             if (channel.ToLowerInvariant() == App.Settings.Prop.Channel.ToLowerInvariant())
                 return;
 
-            if (App.Settings.Prop.ChannelChangeMode == ChannelChangeMode.Ignore)
-                return;
-
-            if (App.Settings.Prop.ChannelChangeMode != ChannelChangeMode.Automatic)
+            // don't change if roblox is already running
+            if (Process.GetProcessesByName("RobloxPlayerBeta").Any())
             {
-                if (channel == App.State.Prop.LastEnrolledChannel)
-                    return;
-
-                MessageBoxResult result = Frontend.ShowMessageBox(
-                    string.Format(Resources.Strings.ProtocolHandler_RobloxSwitchedChannel, channel, App.Settings.Prop.Channel),
-                    MessageBoxImage.Question,
-                    MessageBoxButton.YesNo
-                );
-
-                if (result != MessageBoxResult.Yes)
-                    return;
+                App.Logger.WriteLine("ProtocolHandler::ChangeChannel", $"Ignored channel change from {App.Settings.Prop.Channel} to {channel} because Roblox is already running");
             }
-
-            App.Logger.WriteLine("Protocol::ParseUri", $"Changed Roblox channel from {App.Settings.Prop.Channel} to {channel}");
-            App.Settings.Prop.Channel = channel;
+            else
+            {
+                App.Logger.WriteLine("ProtocolHandler::ChangeChannel", $"Changed Roblox channel from {App.Settings.Prop.Channel} to {channel}");
+                App.Settings.Prop.Channel = channel;
+            }
         }
 
         public static void EnrollChannel(string channel)
