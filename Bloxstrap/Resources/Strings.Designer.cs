@@ -2449,6 +2449,24 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Roblox will fully close when you leave a game instead of dropping you back into the app..
+        /// </summary>
+        public static string Menu_Integrations_DesktopApp_Description {
+            get {
+                return ResourceManager.GetString("Menu.Integrations.DesktopApp.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t exit to desktop app.
+        /// </summary>
+        public static string Menu_Integrations_DesktopApp_Title {
+            get {
+                return ResourceManager.GetString("Menu.Integrations.DesktopApp.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allows for Bloxstrap to detect what Roblox game you&apos;re playing. Certain features may require this..
         /// </summary>
         public static string Menu_Integrations_EnableActivityTracking_Description {
@@ -2566,6 +2584,15 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file you have chosen does not appear to be a valid font file..
+        /// </summary>
+        public static string Menu_Mods_Misc_CustomFont_Invalid {
+            get {
+                return ResourceManager.GetString("Menu.Mods.Misc.CustomFont.Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove applied font.
         /// </summary>
         public static string Menu_Mods_Misc_CustomFont_Remove {
@@ -2625,24 +2652,6 @@ namespace Bloxstrap.Resources {
         public static string Menu_Mods_OpenModsFolder_Title {
             get {
                 return ResourceManager.GetString("Menu.Mods.OpenModsFolder.Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stops the desktop app from showing, especially when you leave a game..
-        /// </summary>
-        public static string Menu_Mods_Presets_DisableDesktopApp_Description {
-            get {
-                return ResourceManager.GetString("Menu.Mods.Presets.DisableDesktopApp.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Disable desktop app.
-        /// </summary>
-        public static string Menu_Mods_Presets_DisableDesktopApp_Title {
-            get {
-                return ResourceManager.GetString("Menu.Mods.Presets.DisableDesktopApp.Title", resourceCulture);
             }
         }
         
