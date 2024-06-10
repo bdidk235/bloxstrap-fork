@@ -469,6 +469,15 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string Common_Warning {
+            get {
+                return ResourceManager.GetString("Common.Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
         public static string Common_Yes {
@@ -505,56 +514,11 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keep on top.
+        ///   Looks up a localized string similar to Open log file.
         /// </summary>
-        public static string ContextMenu_LogTracer_KeepOnTop {
+        public static string ContextMenu_OpenLogFile {
             get {
-                return ResourceManager.GetString("ContextMenu.LogTracer.KeepOnTop", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Scroll to end.
-        /// </summary>
-        public static string ContextMenu_LogTracer_ScrollToEnd {
-            get {
-                return ResourceManager.GetString("ContextMenu.LogTracer.ScrollToEnd", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Text wrapping.
-        /// </summary>
-        public static string ContextMenu_LogTracer_TextWrapping {
-            get {
-                return ResourceManager.GetString("ContextMenu.LogTracer.TextWrapping", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Log tracer.
-        /// </summary>
-        public static string ContextMenu_LogTracer_Title {
-            get {
-                return ResourceManager.GetString("ContextMenu.LogTracer.Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Tracing {0}.
-        /// </summary>
-        public static string ContextMenu_LogTracer_TracingFormat {
-            get {
-                return ResourceManager.GetString("ContextMenu.LogTracer.TracingFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Open log tracer.
-        /// </summary>
-        public static string ContextMenu_OpenLogTracer {
-            get {
-                return ResourceManager.GetString("ContextMenu.OpenLogTracer", resourceCulture);
+                return ResourceManager.GetString("ContextMenu.OpenLogFile", resourceCulture);
             }
         }
         
@@ -649,7 +613,9 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Paste in your JSON here....
+        ///   Looks up a localized string similar to {
+        ///    &quot;FFlagDebugDisplayFPS&quot;: &quot;True&quot;
+        ///}.
         /// </summary>
         public static string Dialog_BulkAddFastFlag_Paste {
             get {
@@ -1840,11 +1806,50 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An entry for this flag name already exists..
+        /// </summary>
+        public static string Menu_FastFlagEditor_AlreadyExists {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.AlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
         public static string Menu_FastFlagEditor_Back {
             get {
                 return ResourceManager.GetString("Menu.FastFlagEditor.Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Misusing this can lead to instability or unexpected things happening..
+        /// </summary>
+        public static string Menu_FastFlagEditor_BannerText {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.BannerText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use with caution..
+        /// </summary>
+        public static string Menu_FastFlagEditor_BannerTitle {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.BannerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some of the flags you are attempting to import already have set values. Would you like to overwrite their current values with the ones defined in the import?
+        ///
+        ///There are {0} conflicting flag definitions:
+        ///{1}.
+        /// </summary>
+        public static string Menu_FastFlagEditor_ConflictingImport {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.ConflictingImport", resourceCulture);
             }
         }
         
@@ -1876,11 +1881,52 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copied JSON to clipboard..
+        ///   Looks up a localized string similar to The name of this flag is not valid as names can only contain letters, numbers, and underscores.
+        /// </summary>
+        public static string Menu_FastFlagEditor_InvalidCharacter {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.InvalidCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The JSON you&apos;ve entered does not appear to be valid. Please double check it and try again.
+        ///
+        ///More information:
+        ///{0}.
+        /// </summary>
+        public static string Menu_FastFlagEditor_InvalidJSON {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.InvalidJSON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name of this flag is not valid as names must start with FFlag, DFInt, etc.
+        /// </summary>
+        public static string Menu_FastFlagEditor_InvalidPrefix {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.InvalidPrefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied to clipboard..
         /// </summary>
         public static string Menu_FastFlagEditor_JsonCopiedToClipboard {
             get {
                 return ResourceManager.GetString("Menu.FastFlagEditor.JsonCopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You appear to be importing a very large configuration. You should only be importing configurations that you fully understand. Do NOT blindly paste in configurations made by other people. If you continue, you will very likely end up with stability issues and encounter unexpected changes.
+        ///
+        ///Are you sure you want to continue?.
+        /// </summary>
+        public static string Menu_FastFlagEditor_LargeConfig {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.LargeConfig", resourceCulture);
             }
         }
         
@@ -1912,6 +1958,44 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go back.
+        /// </summary>
+        public static string Menu_FastFlagEditor_Warning_Back {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Warning.Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I know what I&apos;m doing.
+        /// </summary>
+        public static string Menu_FastFlagEditor_Warning_Continue {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Warning.Continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you know what you are doing?.
+        /// </summary>
+        public static string Menu_FastFlagEditor_Warning_Header {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Warning.Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fast Flags are extremely powerful, being that they are intended to only be used by Roblox engineers. While they can be very useful, manually configuring them can cause serious issues with stability and functionality. Do NOT use the editor if you are unsure of what you are doing.
+        ///
+        ///Do NOT use this to import large &quot;flag lists&quot; made by other people that promise to improve performance or such. They are subject to the aforementioned issues, and they will cause problems for you since you will not be fully aware  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Menu_FastFlagEditor_Warning_Text {
+            get {
+                return ResourceManager.GetString("Menu.FastFlagEditor.Warning.Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Control how specific Roblox engine parameters and features are configured..
         /// </summary>
         public static string Menu_FastFlags_Description {
@@ -1921,7 +2005,7 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Manage your own FastFlags..
+        ///   Looks up a localized string similar to Manage your own Fast Flags. Use with caution..
         /// </summary>
         public static string Menu_FastFlags_Editor_Description {
             get {
@@ -1930,7 +2014,7 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Learn more about FastFlags..
+        ///   Looks up a localized string similar to Learn more about Fast Flags, what these presets do, and how to use them..
         /// </summary>
         public static string Menu_FastFlags_Help_Description {
             get {

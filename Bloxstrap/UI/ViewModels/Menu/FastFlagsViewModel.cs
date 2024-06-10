@@ -23,12 +23,21 @@ namespace Bloxstrap.UI.ViewModels.Menu
         private void OpenFastFlagEditor()
         {
             if (Window.GetWindow(_page) is INavigationWindow window)
-                window.Navigate(typeof(FastFlagEditorPage));
+            {
+                if (App.State.Prop.ShowFFlagEditorWarning)
+                    window.Navigate(typeof(FastFlagEditorWarningPage));
+                else
+                    window.Navigate(typeof(FastFlagEditorPage));
+            }
         }
 
         public ICommand OpenFastFlagEditorCommand => new RelayCommand(OpenFastFlagEditor);
 
-        public Visibility ShowDebugFlags => App.Settings.Prop.PowerTools ? Visibility.Visible : Visibility.Collapsed;
+#if DEBUG
+        public Visibility ShowDebugFlags => Visibility.Visible;
+#else
+        public Visibility ShowDebugFlags => Visibility.Collapsed;
+#endif
 
         public bool HttpRequestLogging
         {

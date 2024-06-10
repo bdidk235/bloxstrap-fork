@@ -257,6 +257,9 @@ Your ReShade configuration files will still be saved, and you can locate them by
   <data name="Common.Value" xml:space="preserve">
     <value>Value</value>
   </data>
+  <data name="Common.Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
   <data name="Common.Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
@@ -269,23 +272,8 @@ Your ReShade configuration files will still be saved, and you can locate them by
   <data name="ContextMenu.CopyDeeplinkInvite" xml:space="preserve">
     <value>Copy invite deeplink</value>
   </data>
-  <data name="ContextMenu.LogTracer.KeepOnTop" xml:space="preserve">
-    <value>Keep on top</value>
-  </data>
-  <data name="ContextMenu.LogTracer.ScrollToEnd" xml:space="preserve">
-    <value>Scroll to end</value>
-  </data>
-  <data name="ContextMenu.LogTracer.TextWrapping" xml:space="preserve">
-    <value>Text wrapping</value>
-  </data>
-  <data name="ContextMenu.LogTracer.Title" xml:space="preserve">
-    <value>Log tracer</value>
-  </data>
-  <data name="ContextMenu.LogTracer.TracingFormat" xml:space="preserve">
-    <value>Tracing {0}</value>
-  </data>
-  <data name="ContextMenu.OpenLogTracer" xml:space="preserve">
-    <value>Open log tracer</value>
+  <data name="ContextMenu.OpenLogFile" xml:space="preserve">
+    <value>Open log file</value>
   </data>
   <data name="ContextMenu.SeeServerDetails" xml:space="preserve">
     <value>See server details</value>
@@ -318,7 +306,9 @@ Your ReShade configuration files will still be saved, and you can locate them by
     <value>Add FastFlag</value>
   </data>
   <data name="Dialog.BulkAddFastFlag.Paste" xml:space="preserve">
-    <value>Paste in your JSON here...</value>
+    <value>{
+    "FFlagDebugDisplayFPS": "True"
+}</value>
   </data>
   <data name="Dialog.Connectivity.MoreInfo" xml:space="preserve">
     <value>More information:</value>
@@ -716,8 +706,23 @@ Would you like to upgrade your currently installed version?</value>
   <data name="Menu.FastFlagEditor.AddNew" xml:space="preserve">
     <value>Add new</value>
   </data>
+  <data name="Menu.FastFlagEditor.AlreadyExists" xml:space="preserve">
+    <value>An entry for this flag name already exists.</value>
+  </data>
   <data name="Menu.FastFlagEditor.Back" xml:space="preserve">
     <value>Back</value>
+  </data>
+  <data name="Menu.FastFlagEditor.BannerText" xml:space="preserve">
+    <value>Misusing this can lead to instability or unexpected things happening.</value>
+  </data>
+  <data name="Menu.FastFlagEditor.BannerTitle" xml:space="preserve">
+    <value>Use with caution.</value>
+  </data>
+  <data name="Menu.FastFlagEditor.ConflictingImport" xml:space="preserve">
+    <value>Some of the flags you are attempting to import already have set values. Would you like to overwrite their current values with the ones defined in the import?
+
+There are {0} conflicting flag definitions:
+{1}</value>
   </data>
   <data name="Menu.FastFlagEditor.DeleteSelected" xml:space="preserve">
     <value>Delete selected</value>
@@ -728,8 +733,25 @@ Would you like to upgrade your currently installed version?</value>
   <data name="Menu.FastFlagEditor.ExportJson" xml:space="preserve">
     <value>Export JSON</value>
   </data>
+  <data name="Menu.FastFlagEditor.InvalidCharacter" xml:space="preserve">
+    <value>The name of this flag is not valid as names can only contain letters, numbers, and underscores</value>
+  </data>
+  <data name="Menu.FastFlagEditor.InvalidJSON" xml:space="preserve">
+    <value>The JSON you've entered does not appear to be valid. Please double check it and try again.
+
+More information:
+{0}</value>
+  </data>
+  <data name="Menu.FastFlagEditor.InvalidPrefix" xml:space="preserve">
+    <value>The name of this flag is not valid as names must start with FFlag, DFInt, etc</value>
+  </data>
   <data name="Menu.FastFlagEditor.JsonCopiedToClipboard" xml:space="preserve">
-    <value>Copied JSON to clipboard.</value>
+    <value>Copied to clipboard.</value>
+  </data>
+  <data name="Menu.FastFlagEditor.LargeConfig" xml:space="preserve">
+    <value>You appear to be importing a very large configuration. You should only be importing configurations that you fully understand. Do NOT blindly paste in configurations made by other people. If you continue, you will very likely end up with stability issues and encounter unexpected changes.
+
+Are you sure you want to continue?</value>
   </data>
   <data name="Menu.FastFlagEditor.Search" xml:space="preserve">
     <value>Search</value>
@@ -740,15 +762,29 @@ Would you like to upgrade your currently installed version?</value>
   <data name="Menu.FastFlagEditor.Title" xml:space="preserve">
     <value>Fast Flag Editor</value>
   </data>
+  <data name="Menu.FastFlagEditor.Warning.Back" xml:space="preserve">
+    <value>Go back</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Warning.Continue" xml:space="preserve">
+    <value>I know what I'm doing</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Warning.Header" xml:space="preserve">
+    <value>Do you know what you are doing?</value>
+  </data>
+  <data name="Menu.FastFlagEditor.Warning.Text" xml:space="preserve">
+    <value>Fast Flags are extremely powerful, being that they are intended to only be used by Roblox engineers. While they can be very useful, manually configuring them can cause serious issues with stability and functionality. Do NOT use the editor if you are unsure of what you are doing.
+
+Do NOT use this to import large "flag lists" made by other people that promise to improve performance or such. They are subject to the aforementioned issues, and they will cause problems for you since you will not be fully aware of what they are changing. If you were about to do that, GO BACK.</value>
+  </data>
   <data name="Menu.FastFlags.Description" xml:space="preserve">
     <value>Control how specific Roblox engine parameters and features are configured.</value>
   </data>
   <data name="Menu.FastFlags.Editor.Description" xml:space="preserve">
-    <value>Manage your own FastFlags.</value>
+    <value>Manage your own Fast Flags. Use with caution.</value>
     <comment>Title is Menu.FastFlagEditor.Title</comment>
   </data>
   <data name="Menu.FastFlags.Help.Description" xml:space="preserve">
-    <value>Learn more about FastFlags.</value>
+    <value>Learn more about Fast Flags, what these presets do, and how to use them.</value>
     <comment>Title is Common.Help</comment>
   </data>
   <data name="Menu.FastFlags.Presets.AltGraphicsSelector.Description" xml:space="preserve">
