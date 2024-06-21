@@ -99,13 +99,9 @@ namespace Bloxstrap
 
                 RobloxLaunchMode = LaunchMode.Player;
             }
-#if STUDIO_FEATURES
             else if (arg.StartsWith("roblox-studio:"))
             {
                 RobloxLaunchArgs = ProtocolHandler.ParseUri(arg);
-
-                if (!RobloxLaunchArgs.Contains("-startEvent"))
-                    RobloxLaunchArgs += " -startEvent www.roblox.com/robloxQTStudioStartedEvent";
 
                 RobloxLaunchMode = LaunchMode.Studio;
             }
@@ -121,16 +117,15 @@ namespace Bloxstrap
 
                 if (Args.Length >= 2)
                 {
-                    string pathArg = Args[i + 1];
+                    string pathArg = Args[1];
 
                     if (pathArg.StartsWith('-'))
                         return; // likely a launch flag, ignore it.
 
-                    i++; // path arg
+                    //i++; // path arg
                     RobloxLaunchArgs = $"-task EditFile -localPlaceFile \"{pathArg}\"";
                 }
             }
-#endif
         }
 
         private void Parse()
