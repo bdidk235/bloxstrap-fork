@@ -301,7 +301,7 @@ Click for more information</value>
     <value>Type</value>
   </data>
   <data name="Dialog.AddFastFlag.Title" xml:space="preserve">
-    <value>Add FastFlag</value>
+    <value>Add Fast Flag</value>
   </data>
   <data name="Dialog.Connectivity.MoreInfo" xml:space="preserve">
     <value>More information:</value>
@@ -310,7 +310,7 @@ Click for more information</value>
     <value>Connectivity error</value>
   </data>
   <data name="Dialog.Connectivity.UnableToConnect" xml:space="preserve">
-    <value>Bloxstrap is unable to connect to {0}</value>
+    <value>Bloxstrap is unable to connect to Roblox</value>
   </data>
   <data name="Dialog.Exception.CopyLogContents" xml:space="preserve">
     <value>Copy log contents</value>
@@ -412,13 +412,13 @@ Click for more information</value>
     <value>Default</value>
   </data>
   <data name="Enums.FlagPresets.InGameMenuVersion.V1" xml:space="preserve">
-    <value>Version 1 (2015)</value>
+    <value>2015 (V1)</value>
   </data>
   <data name="Enums.FlagPresets.InGameMenuVersion.V2" xml:space="preserve">
-    <value>Version 2 (2020)</value>
+    <value>2022 (V2)</value>
   </data>
   <data name="Enums.FlagPresets.InGameMenuVersion.V4" xml:space="preserve">
-    <value>Version 4 (2023)</value>
+    <value>2023 (V4)</value>
   </data>
   <data name="Enums.FlagPresets.LightingMode.Default" xml:space="preserve">
     <value>Chosen by game</value>
@@ -445,16 +445,13 @@ Click for more information</value>
     <value>Automatic</value>
   </data>
   <data name="Enums.FlagPresets.MSAAMode.x1" xml:space="preserve">
-    <value>1x MSAA</value>
+    <value>1x</value>
   </data>
   <data name="Enums.FlagPresets.MSAAMode.x2" xml:space="preserve">
-    <value>2x MSAA</value>
+    <value>2x</value>
   </data>
   <data name="Enums.FlagPresets.MSAAMode.x4" xml:space="preserve">
-    <value>4x MSAA</value>
-  </data>
-  <data name="Enums.FlagPresets.MSAAMode.x8" xml:space="preserve">
-    <value>8x MSAA</value>
+    <value>4x</value>
   </data>
   <data name="Enums.FlagPresets.RenderingMode.D3D10" xml:space="preserve">
     <value>Direct3D 10</value>
@@ -670,13 +667,13 @@ There are {0} conflicting flag definitions:
     <value>Delete selected</value>
   </data>
   <data name="Menu.FastFlagEditor.Description" xml:space="preserve">
-    <value>Manage your own FastFlags. Double click a column to edit.</value>
+    <value>Manage your own Fast Flags. Double click a column to edit.</value>
   </data>
   <data name="Menu.FastFlagEditor.ExportJson" xml:space="preserve">
     <value>Export JSON</value>
   </data>
   <data name="Menu.FastFlagEditor.InvalidCharacter" xml:space="preserve">
-    <value>The name of this flag is not valid as names can only contain letters, numbers, and underscores</value>
+    <value>The entry for '{0}' is not valid as the name can only contain letters, numbers, and underscores</value>
   </data>
   <data name="Menu.FastFlagEditor.InvalidJSON" xml:space="preserve">
     <value>The JSON you've entered does not appear to be valid. Please double check it and try again.
@@ -685,7 +682,7 @@ More information:
 {0}</value>
   </data>
   <data name="Menu.FastFlagEditor.InvalidPrefix" xml:space="preserve">
-    <value>The name of this flag is not valid as names must start with FFlag, DFInt, etc</value>
+    <value>The entry for '{0}' is not valid as the name must start with FFlag, DFInt, etc</value>
   </data>
   <data name="Menu.FastFlagEditor.JsonCopiedToClipboard" xml:space="preserve">
     <value>Copied to clipboard.</value>
@@ -730,51 +727,25 @@ Do NOT use this to import large "flag lists" made by other people that promise t
     <comment>Title is Common.Help</comment>
   </data>
   <data name="Menu.FastFlags.Presets.AltGraphicsSelector.Description" xml:space="preserve">
-    <value>Toggle between using the consolidated 1-10 / fine-grained 1-21 graphics quality slider.</value>
+    <value>Allows you to configure 21 different quality levels instead of 10.</value>
   </data>
   <data name="Menu.FastFlags.Presets.AltGraphicsSelector.Title" xml:space="preserve">
-    <value>Use alternate graphics quality selector</value>
+    <value>Use advanced graphics quality selector</value>
   </data>
   <data name="Menu.FastFlags.Presets.D3DExclusiveFullscreenInfo" xml:space="preserve">
-    <value>FastFlag preset for Direct3D [exclusive fullscreen]({0}) using Alt+Enter is already enabled by default.</value>
-  </data>
-  <data name="Menu.FastFlags.Presets.Debug.FlagStateOverlay.Description" xml:space="preserve">
-    <value>Show values of specified flags during runtime. Each flag is comma separated.</value>
-  </data>
-  <data name="Menu.FastFlags.Presets.Debug.FlagStateOverlay.Title" xml:space="preserve">
-    <value>Flag state overlay</value>
-  </data>
-  <data name="Menu.FastFlags.Presets.Debug.HttpProxyAddress.Description" xml:space="preserve">
-    <value>Set blank if not using a proxy. Don't forget to add cacert.pem as a mod.</value>
-    <comment>Do not translate "cacert.pem"</comment>
-  </data>
-  <data name="Menu.FastFlags.Presets.Debug.HttpProxyAddress.Title" xml:space="preserve">
-    <value>HTTP proxy address</value>
-  </data>
-  <data name="Menu.FastFlags.Presets.Debug.HttpRequestLogging.Description" xml:space="preserve">
-    <value>Enables logging of HTTP requests (DFLogHttpTraceLight=12).</value>
-    <comment>Do not translate "DFLogHttpTraceLight"</comment>
-  </data>
-  <data name="Menu.FastFlags.Presets.Debug.HttpRequestLogging.Title" xml:space="preserve">
-    <value>HTTP request logging</value>
-  </data>
-  <data name="Menu.FastFlags.Presets.Debug.Title" xml:space="preserve">
-    <value>Debug</value>
-  </data>
-  <data name="Menu.FastFlags.Presets.EscapeMenuVersion.Description" xml:space="preserve">
-    <value>Choose which version of the escape menu to use.</value>
+    <value>Direct3D [exclusive fullscreen]({0}) using Alt+Enter is enabled by default.</value>
   </data>
   <data name="Menu.FastFlags.Presets.EscapeMenuVersion.Title" xml:space="preserve">
     <value>Preferred escape menu version</value>
   </data>
   <data name="Menu.FastFlags.Presets.FixDisplayScaling.Description" xml:space="preserve">
-    <value>Roblox reduces your rendering quality, depending on display scaling. This toggle disables that.</value>
+    <value>Roblox reduces your rendering quality depending on how your display is scaled in Windows.</value>
   </data>
   <data name="Menu.FastFlags.Presets.FixDisplayScaling.Title" xml:space="preserve">
     <value>Preserve rendering quality with display scaling</value>
   </data>
   <data name="Menu.FastFlags.Presets.FPSLimit.Description" xml:space="preserve">
-    <value>Use a large number like 9999 for no limit. Set as 0 for defaults.</value>
+    <value>Set to 0 for defaults if you want to use Roblox's native framerate unlocker.</value>
   </data>
   <data name="Menu.FastFlags.Presets.FPSLimit.Title" xml:space="preserve">
     <value>Framerate limit</value>
@@ -786,19 +757,10 @@ Do NOT use this to import large "flag lists" made by other people that promise t
     <value>Enable ability to hide GUIs</value>
   </data>
   <data name="Menu.FastFlags.Presets.LightingTechnology.Description" xml:space="preserve">
-    <value>Choose which lighting technology should be forced enabled in all games.</value>
+    <value>Chosen one will be force enabled in all games. [Beware, may cause lighting issues!]({0})</value>
   </data>
   <data name="Menu.FastFlags.Presets.LightingTechnology.Title" xml:space="preserve">
     <value>Preferred lighting technology</value>
-  </data>
-  <data name="Menu.FastFlags.Presets.Materials.Description" xml:space="preserve">
-    <value>Choose which material version should be forced in all games.</value>
-  </data>
-  <data name="Menu.FastFlags.Presets.Materials.Title" xml:space="preserve">
-    <value>Preferred materials</value>
-  </data>
-  <data name="Menu.FastFlags.Presets.RenderingMode.Description" xml:space="preserve">
-    <value>Choose what renderer Roblox should use. VR requires Direct3D/Automatic.</value>
   </data>
   <data name="Menu.FastFlags.Presets.RenderingMode.Title" xml:space="preserve">
     <value>Rendering mode</value>
@@ -937,7 +899,7 @@ Selecting 'No' will ignore this warning and continue installation.</value>
     <value>Choose font...</value>
   </data>
   <data name="Menu.Mods.Misc.CustomFont.Description" xml:space="preserve">
-    <value>Forces every in-game font to be a font that you choose.</value>
+    <value>Font size can be adjusted in the Fast Flags tab.</value>
   </data>
   <data name="Menu.Mods.Misc.CustomFont.Invalid" xml:space="preserve">
     <value>The file you have chosen does not appear to be a valid font file.</value>
@@ -946,7 +908,7 @@ Selecting 'No' will ignore this warning and continue installation.</value>
     <value>Remove applied font</value>
   </data>
   <data name="Menu.Mods.Misc.CustomFont.Title" xml:space="preserve">
-    <value>Apply custom font</value>
+    <value>Use custom font</value>
   </data>
   <data name="Menu.Mods.Misc.DisableFullscreenOptimisations.Description" xml:space="preserve">
     <value>A Windows feature that may conflict with performance in full-screen.</value>
@@ -1003,7 +965,7 @@ Selecting 'No' will ignore this warning and continue installation.</value>
     <value>There's just a few things you first should know about.</value>
   </data>
   <data name="Menu.PreInstall.Info.1" xml:space="preserve">
-    <value>After installation has finished, the Bloxstrap Menu will be registered as an application in the Start menu. If you ever need to access it again to re-adjust your settings, or access resources such as FastFlag management, you can find it there.</value>
+    <value>After installation has finished, the Bloxstrap Menu will be registered as an application in the Start menu. If you ever need to access it again to re-adjust your settings, or access resources such as Fast Flag management, you can find it there.</value>
   </data>
   <data name="Menu.PreInstall.Info.2" xml:space="preserve">
     <value>If you ever need help or guidance with anything, be sure to check the [Wiki]({0}). If you still need something, open an [issue]({1}) on GitHub, or join our [Discord server]({2}).</value>
@@ -1027,19 +989,94 @@ Selecting 'No' will ignore this warning and continue installation.</value>
     <value>Choose preferred language</value>
   </data>
   <data name="Dialog.LanguageSelector.Subtext" xml:space="preserve">
-    <value>Choose a language before continuing with installation.
-Scroll for more languages.</value>
+    <value>Choose a language before continuing with installation.</value>
   </data>
   <data name="Menu.Appearance.Language.Title" xml:space="preserve">
     <value>Language</value>
   </data>
   <data name="Menu.Appearance.Language.Description" xml:space="preserve">
-    <value>Scroll to see more. A relaunch is required for changes to take effect.</value>
+    <value>A relaunch is required for changes to take effect.</value>
   </data>
   <data name="Menu.Behaviour.ForceRobloxLanguage.Title" xml:space="preserve">
     <value>Allow use of unsupported Roblox languages</value>
   </data>
   <data name="Menu.Behaviour.ForceRobloxLanguage.Description" xml:space="preserve">
     <value>Only applies to games launched from the Roblox website.</value>
+  </data>
+  <data name="Enums.FlagPresets.InGameMenuVersion.V4Chrome" xml:space="preserve">
+    <value>2023 (V4 + New UI)</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.Categories.Rendering" xml:space="preserve">
+    <value>Rendering and Graphics</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.Categories.UserInterface" xml:space="preserve">
+    <value>User Interface and Layout</value>
+  </data>
+  <data name="Menu.FastFlags.ManagerEnabled.Title" xml:space="preserve">
+    <value>Allow Bloxstrap to manage Fast Flags</value>
+  </data>
+  <data name="Menu.FastFlags.ManagerEnabled.Description" xml:space="preserve">
+    <value>Disabling this will prevent anything configured here from being applied to Roblox.</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.MSAA.Title" xml:space="preserve">
+    <value>Anti-aliasing quality (MSAA)</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.DisablePostFX.Title" xml:space="preserve">
+    <value>Disable post-processing effects</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.FullscreenTitlebar.Title" xml:space="preserve">
+    <value>Disable full-screen titlebar</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.FullscreenTitlebar.Description" xml:space="preserve">
+    <value>Stops it from showing whenever you move your mouse to the top of the screen.</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.TextureQuality.Title" xml:space="preserve">
+    <value>Texture quality</value>
+  </data>
+  <data name="Enums.FlagPresets.TextureQuality.Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Enums.FlagPresets.TextureQuality.Level0" xml:space="preserve">
+    <value>Level 0 (Lowest)</value>
+  </data>
+  <data name="Enums.FlagPresets.TextureQuality.Level1" xml:space="preserve">
+    <value>Level 1</value>
+  </data>
+  <data name="Enums.FlagPresets.TextureQuality.Level2" xml:space="preserve">
+    <value>Level 2</value>
+  </data>
+  <data name="Enums.FlagPresets.TextureQuality.Level3" xml:space="preserve">
+    <value>Level 3 (Highest)</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.DisablePlayerShadows.Title" xml:space="preserve">
+    <value>Disable player shadows</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.FontPadding.Title" xml:space="preserve">
+    <value>Font size</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.FontPadding.Description" xml:space="preserve">
+    <value>Default value is 1. Adjust if you use a custom font.</value>
+  </data>
+  <data name="Menu.FastFlags.Presets.DisableTerrainTextures.Title" xml:space="preserve">
+    <value>Disable terrain textures</value>
+  </data>
+  <data name="Dialog.Connectivity.UnableToDownload" xml:space="preserve">
+    <value>Bloxstrap is unable to download Roblox</value>
+  </data>
+  <data name="Dialog.Connectivity.UnableToDownloadReason" xml:space="preserve">
+    <value>Roblox cannot be downloaded at this time. Please read the following help page for more information: {0}</value>
+  </data>
+  <data name="Common.ImportFromFile" xml:space="preserve">
+    <value>Import from file</value>
+  </data>
+  <data name="FileTypes.JSONFiles" xml:space="preserve">
+    <value>JSON files</value>
+  </data>
+  <data name="Menu.FastFlagEditor.InvalidBoolValue" xml:space="preserve">
+    <value>The entry for '{0}' is not valid as the value must be a boolean (either 'True' or 'False')</value>
+    <comment>Do not translate 'True' and 'False', those must stay in English</comment>
+  </data>
+  <data name="Menu.FastFlagEditor.InvalidNumberValue" xml:space="preserve">
+    <value>The entry for '{0}' is not valid as the value must be a number</value>
   </data>
 </root>

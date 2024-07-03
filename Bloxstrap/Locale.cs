@@ -6,6 +6,10 @@ namespace Bloxstrap
 {
     internal static class Locale
     {
+        public static CultureInfo CurrentCulture = CultureInfo.InvariantCulture;
+
+        public static bool RightToLeft { get; private set; } = false;
+
         public static readonly Dictionary<string, string> SupportedLocales = new()
         {
             { "nil", Strings.Enums_Theme_Default }, // /shrug
@@ -15,8 +19,9 @@ namespace Bloxstrap
             { "bn", "বাংলা" },
             { "bs", "Босански" },
             { "bg", "Български" },
-            { "zh-CN", "中文(简体)" },
-            // { "zh-TW", "中文(繁體)" },
+            { "zh-CN", "中文 (简体)" },
+            { "zh-HK", "中文 (廣東話)" },
+            { "zh-TW", "中文 (繁體)" },
             { "cs", "Čeština" },
             // { "dk", "Dansk" },
             { "nl", "Nederlands" },
@@ -25,8 +30,9 @@ namespace Bloxstrap
             { "fr", "Français" },
             { "de", "Deutsch" },
             { "he", "עברית‎" },
+            { "hr", "Hrvatski" },
             // { "hi", "हिन्दी" },
-            // { "hu", "Magyar" },
+            { "hu", "Magyar" },
             // { "id", "Bahasa Indonesia" },
             // { "it", "Italiano" },
             { "ja", "日本語" },
@@ -45,7 +51,7 @@ namespace Bloxstrap
             { "vi", "Tiếng Việt" }
         };
 
-        public static string GetIdentifierFromName(string language) => Locale.SupportedLocales.Where(x => x.Value == language).First().Key;
+        public static string GetIdentifierFromName(string language) => SupportedLocales.FirstOrDefault(x => x.Value == language).Key ?? "nil";
 
         public static List<string> GetLanguages()
         {
@@ -71,17 +77,31 @@ namespace Bloxstrap
             if (identifier == "nil")
                 return;
 
-            App.CurrentCulture = new CultureInfo(identifier);
+            CurrentCulture = new CultureInfo(identifier);
 
-            CultureInfo.DefaultThreadCurrentUICulture = App.CurrentCulture;
-            Thread.CurrentThread.CurrentUICulture = App.CurrentCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CurrentCulture;
+            Thread.CurrentThread.CurrentUICulture = CurrentCulture;
 
             RoutedEventHandler? handler = null;
 
             if (identifier == "ar" || identifier == "he")
-                handler = new((window, _) => ((Window)window).FlowDirection = FlowDirection.RightToLeft);
+            {
+                RightToLeft = true;
+
+                handler = new((sender, _) => 
+                { 
+                    var window = (Window)sender;
+                
+                    window.FlowDirection = FlowDirection.RightToLeft;
+
+                    if (window.ContextMenu is not null)
+                        window.ContextMenu.FlowDirection = FlowDirection.RightToLeft;
+                });
+            }
             else if (identifier == "th")
+            {
                 handler = new((window, _) => ((Window)window).FontFamily = new System.Windows.Media.FontFamily(new Uri("pack://application:,,,/Resources/Fonts/"), "./#Noto Sans Thai"));
+            }
 
             // https://supportcenter.devexpress.com/ticket/details/t905790/is-there-a-way-to-set-right-to-left-mode-in-wpf-for-the-whole-application
             if (handler is not null)

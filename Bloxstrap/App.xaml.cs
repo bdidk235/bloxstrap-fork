@@ -29,8 +29,6 @@ namespace Bloxstrap
 
         public static LaunchSettings LaunchSettings { get; private set; } = null!;
 
-        public static CultureInfo CurrentCulture { get; set; } = CultureInfo.InvariantCulture;
-
         public static BuildMetadataAttribute BuildMetadata = Assembly.GetExecutingAssembly().GetCustomAttribute<BuildMetadataAttribute>()!;
         public static string Version = Assembly.GetExecutingAssembly().GetName().Version!.ToString()[..^2];
 
@@ -113,7 +111,7 @@ namespace Bloxstrap
         {
             const string LOG_IDENT = "App::OnStartup";
 
-            CurrentCulture = Thread.CurrentThread.CurrentUICulture;
+            Locale.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
 
             base.OnStartup(e);
 
@@ -161,7 +159,13 @@ namespace Bloxstrap
             if (connectionResult is not null)
             {
                 Logger.WriteException(LOG_IDENT, connectionResult);
-                Frontend.ShowConnectivityDialog("Roblox", Bloxstrap.Resources.Strings.Bootstrapper_Connectivity_Preventing, connectionResult);
+
+                Frontend.ShowConnectivityDialog(
+                    Bloxstrap.Resources.Strings.Dialog_Connectivity_UnableToConnect, 
+                    Bloxstrap.Resources.Strings.Bootstrapper_Connectivity_Preventing, 
+                    connectionResult
+                );
+
                 return;
             }
 
