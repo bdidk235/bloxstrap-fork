@@ -4,13 +4,17 @@
     {
         // note that these are directories that aren't tethered to the basedirectory
         // so these can safely be called before initialization
+        public static string Temp => Path.Combine(Path.GetTempPath(), App.ProjectName);
         public static string UserProfile => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         public static string LocalAppData => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         public static string Desktop => Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        public static string StartMenu => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Programs", App.ProjectName);
+        public static string WindowsStartMenu => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Programs");
         public static string System => Environment.GetFolderPath(Environment.SpecialFolder.System);
 
         public static string Process => Environment.ProcessPath!;
+
+        public static string TempUpdates => Path.Combine(Temp, "Updates");
+        public static string TempLogs => Path.Combine(Temp, "Logs");
 
         public static string Base { get; private set; } = "";
         public static string Downloads { get; private set; } = "";
@@ -39,8 +43,6 @@
             StudioModifications = Path.Combine(Base, "StudioModifications");
 
             Application = Path.Combine(Base, $"{App.ProjectName}.exe");
-
-
         }
     }
 }
