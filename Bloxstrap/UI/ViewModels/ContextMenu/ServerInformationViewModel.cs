@@ -36,7 +36,5 @@ namespace Bloxstrap.UI.ViewModels.ContextMenu
         }
 
         private void CopyInstanceId() => Clipboard.SetDataObject(InstanceId);
-
-        private void RequestClose() => RequestCloseEvent?.Invoke(this, EventArgs.Empty);
     }
 }

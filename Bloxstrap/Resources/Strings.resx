@@ -1138,4 +1138,37 @@ Are you sure you want to continue?</value>
   <data name="Dialog.PlayerError.HelpInformation" xml:space="preserve">
     <value>Please read the following help information, which will open in your web browser when you close this dialog.</value>
   </data>
+  <data name="Common.NetworkError" xml:space="preserve">
+    <value>Could not load data because of a network error.</value>
+  </data>
+  <data name="Common.Loading" xml:space="preserve">
+    <value>Loading, please wait...</value>
+  </data>
+  <data name="About.Supporters.Title" xml:space="preserve">
+    <value>Supporters</value>
+  </data>
+  <data name="About.Supporters.Description" xml:space="preserve">
+    <value>These are the people currently supporting Bloxstrap through [Ko-fi]({0}). A massive thank you to everyone here!</value>
+  </data>
+  <data name="JsonManager.SettingsLoadFailed" xml:space="preserve">
+    <value>Your Settings could not be loaded. They have been reset to the default configuration.</value>
+  </data>
+  <data name="JsonManager.FastFlagsLoadFailed" xml:space="preserve">
+    <value>Your Fast Flags could not be loaded. They have been reset to the default configuration.</value>
+  </data>
+  <data name="ContextMenu.GameHistory.Title" xml:space="preserve">
+    <value>Game history</value>
+  </data>
+  <data name="ContextMenu.GameHistory.Rejoin" xml:space="preserve">
+    <value>Rejoin</value>
+  </data>
+  <data name="ActivityWatcher.RichPresenceLoadFailed" xml:space="preserve">
+    <value>Your current game will not show on your Discord presence because an error occurred when loading the game information.</value>
+  </data>
+  <data name="ContextMenu.GameHistory.Description" xml:space="preserve">
+    <value>Game history is only recorded for your current Roblox session. Games will appear here as you leave them or teleport within them.</value>
+  </data>
+  <data name="ActivityWatcher.LocationQueryFailed" xml:space="preserve">
+    <value>Failed to query server location.</value>
+  </data>
 </root>
