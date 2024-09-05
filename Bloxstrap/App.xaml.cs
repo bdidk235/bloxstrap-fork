@@ -17,7 +17,7 @@ namespace Bloxstrap
         public const string ProjectName = "Bloxstrap";
         public const string ProjectOwner = "pizzaboxer";
         public const string ProjectRepository = "pizzaboxer/bloxstrap";
-        public const string ProjectDownloadLink = "https://bloxstrap.pizzaboxer.xyz";
+        public const string ProjectDownloadLink = "https://bloxstraplabs.com";
         public const string ProjectHelpLink = "https://github.com/pizzaboxer/bloxstrap/wiki";
         public const string ProjectSupportLink = "https://github.com/pizzaboxer/bloxstrap/issues/new";
 
@@ -110,22 +110,24 @@ namespace Bloxstrap
         public static async Task<GithubRelease?> GetLatestRelease()
         {
             const string LOG_IDENT = "App::GetLatestRelease";
-
-            GithubRelease? releaseInfo = null;
-
             try
             {
-                releaseInfo = await Http.GetJson<GithubRelease>($"https://api.github.com/repos/{ProjectRepository}/releases/latest");
+                var releaseInfo = await Http.GetJson<GithubRelease>($"https://api.github.com/repos/{ProjectRepository}/releases/latest");
 
                 if (releaseInfo is null || releaseInfo.Assets is null)
+                {
                     Logger.WriteLine(LOG_IDENT, "Encountered invalid data");
+                    return null;
+                }
+
+                return releaseInfo;
             }
             catch (Exception ex)
             {
                 Logger.WriteException(LOG_IDENT, ex);
             }
 
-            return releaseInfo;
+            return null;
         }
 
         protected override void OnStartup(StartupEventArgs e)

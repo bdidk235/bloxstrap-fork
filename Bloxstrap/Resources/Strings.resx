@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ActivityTracker.LeftGame" xml:space="preserve">
-    <value>left game</value>
-  </data>
-  <data name="ActivityTracker.LookupFailed" xml:space="preserve">
-    <value>lookup failed</value>
-  </data>
   <data name="Bootstrapper.AutoUpdateFailed" xml:space="preserve">
     <value>Bloxstrap was unable to automatically update to version {0}. Please update it manually by downloading and running it from the website.</value>
   </data>
@@ -268,17 +262,11 @@ Your ReShade configuration files will still be saved, and you can locate them by
   <data name="ContextMenu.CopyDeeplinkInvite" xml:space="preserve">
     <value>Copy invite deeplink</value>
   </data>
-  <data name="ContextMenu.SeeServerDetails" xml:space="preserve">
-    <value>See server details</value>
-  </data>
   <data name="ContextMenu.ServerInformation.CopyInstanceId" xml:space="preserve">
     <value>Copy Instance ID</value>
   </data>
   <data name="ContextMenu.ServerInformation.InstanceId" xml:space="preserve">
     <value>Instance ID</value>
-  </data>
-  <data name="ContextMenu.ServerInformation.Loading" xml:space="preserve">
-    <value>Loading, please wait...</value>
   </data>
   <data name="ContextMenu.ServerInformation.Location" xml:space="preserve">
     <value>Location</value>
@@ -401,13 +389,13 @@ If not, then please report this exception through a [GitHub issue]({1}) along wi
     <value>Direct3D 11</value>
   </data>
   <data name="Enums.ServerType.Private" xml:space="preserve">
-    <value>Private</value>
+    <value>Private server</value>
   </data>
   <data name="Enums.ServerType.Public" xml:space="preserve">
-    <value>Public</value>
+    <value>Public server</value>
   </data>
   <data name="Enums.ServerType.Reserved" xml:space="preserve">
-    <value>Reserved</value>
+    <value>Reserved server</value>
   </data>
   <data name="Enums.Theme.Dark" xml:space="preserve">
     <value>Dark</value>
@@ -764,7 +752,7 @@ Selecting 'No' will ignore this warning and continue installation.</value>
     <value>Enable activity tracking</value>
   </data>
   <data name="Menu.Integrations.RequiresActivityTracking" xml:space="preserve">
-    <value>This feature requires activity tracking to be enabled and the Discord desktop app to be installed and running.</value>
+    <value>This feature requires activity tracking to be enabled and the Discord desktop app to be installed and running. [Find out more]({0}).</value>
   </data>
   <data name="Menu.Integrations.ShowGameActivity.Description" xml:space="preserve">
     <value>The Roblox game you're playing will be shown on your Discord profile. [Not working?]({0})</value>
@@ -772,11 +760,11 @@ Selecting 'No' will ignore this warning and continue installation.</value>
   <data name="Menu.Integrations.ShowGameActivity.Title" xml:space="preserve">
     <value>Show game activity</value>
   </data>
-  <data name="Menu.Integrations.ShowServerDetails.Description" xml:space="preserve">
-    <value>When you join a game, you'll be notified of where your server's located. Won't show in fullscreen.</value>
+  <data name="Menu.Integrations.QueryServerLocation.Description" xml:space="preserve">
+    <value>When in-game, you'll be able to see where your server is located via [ipinfo.io]({0}).</value>
   </data>
-  <data name="Menu.Integrations.ShowServerDetails.Title" xml:space="preserve">
-    <value>See server location when joining a game</value>
+  <data name="Menu.Integrations.QueryServerLocation.Title" xml:space="preserve">
+    <value>Query server location</value>
   </data>
   <data name="Menu.Integrations.Title" xml:space="preserve">
     <value>Integrations</value>
@@ -993,7 +981,7 @@ Selecting 'No' will ignore this warning and continue installation.</value>
   <data name="Installer.Welcome.MainText" xml:space="preserve">
     <value>Thank you for downloading Bloxstrap. 
 
-You should have gotten it from either {0} or {1}. Those are the only official websites to get it from.
+You should have downloaded it from either {0} or {1}. Those are the only official websites to get it from. It is your responsibility to ensure you download from an official source.
 
 This installation process will be quick and simple, and you will be able to configure any of Bloxstrap's settings after installation.</value>
   </data>

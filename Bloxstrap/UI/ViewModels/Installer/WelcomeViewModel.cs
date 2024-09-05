@@ -1,13 +1,12 @@
 ﻿namespace Bloxstrap.UI.ViewModels.Installer
 {
-    // TODO: administrator check?
     public class WelcomeViewModel : NotifyPropertyChangedViewModel
     {
         // formatting is done here instead of in xaml, it's just a bit easier
         public string MainText => String.Format(
-            Resources.Strings.Installer_Welcome_MainText,
+            Strings.Installer_Welcome_MainText,
             "[github.com/pizzaboxer/bloxstrap](https://github.com/pizzaboxer/bloxstrap)",
-            "[bloxstrap.pizzaboxer.xyz](https://bloxstrap.pizzaboxer.xyz)"
+            "[bloxstraplabs.com](https://bloxstraplabs.com)"
         );
 
         public string VersionNotice { get; private set; } = "";
