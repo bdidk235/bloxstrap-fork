@@ -854,7 +854,7 @@ namespace Bloxstrap
             // check custom font mod
             // instead of replacing the fonts themselves, we'll just alter the font family manifests
 
-            string modFontFamiliesFolder = Path.Combine(Paths.PlayerModification, "content\\fonts\\families");
+            string modFontFamiliesFolder = Path.Combine(Paths.PlayerModifications, "content\\fonts\\families");
 
             if (File.Exists(Paths.CustomFont))
             {
