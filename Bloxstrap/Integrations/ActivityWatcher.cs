@@ -1,6 +1,4 @@
-using System.Windows;
-
-namespace Bloxstrap.Integrations
+﻿namespace Bloxstrap.Integrations
 {
     public class ActivityWatcher : IDisposable
     {
