@@ -142,33 +142,6 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It&apos;s possible that something is preventing Bloxstrap from connecting to the internet. Please check and try again..
-        /// </summary>
-        public static string Bootstrapper_Connectivity_Preventing {
-            get {
-                return ResourceManager.GetString("Bootstrapper.Connectivity.Preventing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Roblox may be down right now. See status.roblox.com for more information. Please try again later..
-        /// </summary>
-        public static string Bootstrapper_Connectivity_RobloxDown {
-            get {
-                return ResourceManager.GetString("Bootstrapper.Connectivity.RobloxDown", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Bloxstrap timed out when trying to connect to three different Roblox deployment mirrors, indicating a poor internet connection. Please try again later..
-        /// </summary>
-        public static string Bootstrapper_Connectivity_TimedOut {
-            get {
-                return ResourceManager.GetString("Bootstrapper.Connectivity.TimedOut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Could not apply the {0} emoji mod preset because of a network error. To try again, please reconfigure the option in the Bloxstrap Menu..
         /// </summary>
         public static string Bootstrapper_EmojiPresetFetchFailed {
@@ -829,6 +802,60 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something is likely preventing Bloxstrap from connecting to the internet..
+        /// </summary>
+        public static string Dialog_Connectivity_Preventing {
+            get {
+                return ResourceManager.GetString("Dialog.Connectivity.Preventing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Roblox may be down right now. See {0} for more information..
+        /// </summary>
+        public static string Dialog_Connectivity_RobloxDown {
+            get {
+                return ResourceManager.GetString("Dialog.Connectivity.RobloxDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Because Roblox needs to be installed or upgraded, Bloxstrap cannot continue..
+        /// </summary>
+        public static string Dialog_Connectivity_RobloxUpgradeNeeded {
+            get {
+                return ResourceManager.GetString("Dialog.Connectivity.RobloxUpgradeNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For this launch, Roblox will not be checked for upgrades, and changes to mods will not be applied..
+        /// </summary>
+        public static string Dialog_Connectivity_RobloxUpgradeSkip {
+            get {
+                return ResourceManager.GetString("Dialog.Connectivity.RobloxUpgradeSkip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} may be down right now..
+        /// </summary>
+        public static string Dialog_Connectivity_ServiceDown {
+            get {
+                return ResourceManager.GetString("Dialog.Connectivity.ServiceDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The connection timed out, which could indicate a poor internet connection or a firewall block..
+        /// </summary>
+        public static string Dialog_Connectivity_TimedOut {
+            get {
+                return ResourceManager.GetString("Dialog.Connectivity.TimedOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connectivity error.
         /// </summary>
         public static string Dialog_Connectivity_Title {
@@ -838,7 +865,16 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bloxstrap is unable to connect to Roblox.
+        ///   Looks up a localized string similar to Please try again later..
+        /// </summary>
+        public static string Dialog_Connectivity_TryAgainLater {
+            get {
+                return ResourceManager.GetString("Dialog.Connectivity.TryAgainLater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bloxstrap is unable to connect to {0}.
         /// </summary>
         public static string Dialog_Connectivity_UnableToConnect {
             get {
@@ -1407,6 +1443,17 @@ namespace Bloxstrap.Resources {
         public static string Installer_Completion_Title {
             get {
                 return ResourceManager.GetString("Installer.Completion.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bloxstrap has been installed to this location before and is still present, however the installer cannot overwrite the old executable. 
+        ///
+        ///Please manually delete Bloxstrap.exe from the install location or try restarting your system, and then retry installation afterwards..
+        /// </summary>
+        public static string Installer_Install_CannotOverwrite {
+            get {
+                return ResourceManager.GetString("Installer.Install.CannotOverwrite", resourceCulture);
             }
         }
         
@@ -2267,24 +2314,6 @@ namespace Bloxstrap.Resources {
         public static string Menu_FastFlags_ManagerEnabled_Title {
             get {
                 return ResourceManager.GetString("Menu.FastFlags.ManagerEnabled.Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Allows you to configure 21 different quality levels instead of 10..
-        /// </summary>
-        public static string Menu_FastFlags_Presets_AltGraphicsSelector_Description {
-            get {
-                return ResourceManager.GetString("Menu.FastFlags.Presets.AltGraphicsSelector.Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use advanced graphics quality selector.
-        /// </summary>
-        public static string Menu_FastFlags_Presets_AltGraphicsSelector_Title {
-            get {
-                return ResourceManager.GetString("Menu.FastFlags.Presets.AltGraphicsSelector.Title", resourceCulture);
             }
         }
         

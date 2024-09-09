@@ -100,6 +100,35 @@ namespace Bloxstrap
 
             Dialog.ProgressValue = progressValue;
         }
+
+        private void HandleConnectionError(Exception exception)
+        {
+            _noConnection = true;
+
+            string message = Strings.Dialog_Connectivity_Preventing;
+
+            if (exception.GetType() == typeof(AggregateException))
+                exception = exception.InnerException!;
+
+            if (exception.GetType() == typeof(HttpRequestException))
+                message = String.Format(Strings.Dialog_Connectivity_RobloxDown, "[status.roblox.com](https://status.roblox.com)");
+            else if (exception.GetType() == typeof(TaskCanceledException))
+                message = Strings.Dialog_Connectivity_TimedOut;
+
+            if (_mustUpgrade)
+                message += $"\n\n{Strings.Dialog_Connectivity_RobloxUpgradeNeeded}\n\n{Strings.Dialog_Connectivity_TryAgainLater}";
+            else
+                message += $"\n\n{Strings.Dialog_Connectivity_RobloxUpgradeSkip}";
+
+            Frontend.ShowConnectivityDialog(
+                String.Format(Strings.Dialog_Connectivity_UnableToConnect, "Roblox"), 
+                message, 
+                _mustUpgrade ? MessageBoxImage.Error : MessageBoxImage.Warning,
+                exception);
+
+            if (_mustUpgrade)
+                App.Terminate(ErrorCode.ERROR_CANCELLED);
+        }
         
         public async Task Run()
         {
@@ -119,24 +148,7 @@ namespace Bloxstrap
 
             if (connectionResult is not null)
             {
-                App.Logger.WriteLine(LOG_IDENT, "Connectivity check failed!");
-                App.Logger.WriteException(LOG_IDENT, connectionResult);
-
-                string message = Strings.Bootstrapper_Connectivity_Preventing;
-
-                if (connectionResult.GetType() == typeof(HttpResponseException))
-                    message = Strings.Bootstrapper_Connectivity_RobloxDown;
-                else if (connectionResult.GetType() == typeof(TaskCanceledException))
-                    message = Strings.Bootstrapper_Connectivity_TimedOut;
-                else if (connectionResult.GetType() == typeof(AggregateException))
-                    connectionResult = connectionResult.InnerException!;
-
-                // TODO: handle update skip
-                Frontend.ShowConnectivityDialog(Strings.Dialog_Connectivity_UnableToConnect, message, connectionResult);
-
-                App.Terminate(ErrorCode.ERROR_CANCELLED);
-
-                return;
+                HandleConnectionError(connectionResult);
             }
             
 #if !DEBUG || DEBUG_UPDATER
@@ -177,8 +189,17 @@ namespace Bloxstrap
                 App.State.Load();
             }
 
-            // TODO: handle exception and update skip
-            await GetLatestVersionInfo();
+            if (!_noConnection)
+            {
+                try
+                {
+                    await GetLatestVersionInfo();
+                }
+                catch (Exception ex)
+                {
+                    HandleConnectionError(ex);
+                }
+            }
 
             if (!_noConnection)
             {
@@ -190,28 +211,12 @@ namespace Bloxstrap
                 await ApplyModifications();
             }
 
-
-            // check if launch uri is set to our bootstrapper
-            // this doesn't go under register, so we check every launch
-            // just in case the stock bootstrapper changes it back
+            // check registry entries for every launch, just in case the stock bootstrapper changes it back
 
             if (IsStudioLaunch)
-            {
-#if STUDIO_FEATURES
-                ProtocolHandler.Register("roblox-studio", "Roblox", Paths.Application);
-                ProtocolHandler.Register("roblox-studio-auth", "Roblox", Paths.Application);
-
-                ProtocolHandler.RegisterRobloxPlace(Paths.Application);
-                ProtocolHandler.RegisterExtension(".rbxl");
-                ProtocolHandler.RegisterExtension(".rbxlx");
-#endif
-            }
+                WindowsRegistry.RegisterStudio();
             else
-            {
-                // TODO: there needs to be better helper functions for these
-                ProtocolHandler.Register("roblox", "Roblox", Paths.Application, "-player \"%1\"");
-                ProtocolHandler.Register("roblox-player", "Roblox", Paths.Application, "-player \"%1\"");
-            }
+                WindowsRegistry.RegisterPlayer();
 
             await mutex.ReleaseAsync();
 
@@ -250,15 +255,14 @@ namespace Bloxstrap
             {
                 clientVersion = await RobloxDeployment.GetInfo(channel, AppData.BinaryType);
             }
-            catch (HttpResponseException ex)
+            catch (HttpRequestException ex)
             {
-                if (ex.ResponseMessage.StatusCode 
-                    is not HttpStatusCode.Unauthorized 
+                if (ex.StatusCode is not HttpStatusCode.Unauthorized 
                     and not HttpStatusCode.Forbidden 
                     and not HttpStatusCode.NotFound)
                     throw;
 
-                App.Logger.WriteLine(LOG_IDENT, $"Changing channel from {channel} to {RobloxDeployment.DefaultChannel} because HTTP {(int)ex.ResponseMessage.StatusCode}");
+                App.Logger.WriteLine(LOG_IDENT, $"Changing channel from {channel} to {RobloxDeployment.DefaultChannel} because HTTP {(int)ex.StatusCode}");
 
                 channel = RobloxDeployment.DefaultChannel;
                 clientVersion = await RobloxDeployment.GetInfo(channel, AppData.BinaryType);
@@ -642,7 +646,6 @@ namespace Bloxstrap
                 SetStatus(Strings.Bootstrapper_Status_Configuring);
             }
 
-            // TODO: handle faulted tasks
             await Task.WhenAll(extractionTasks);
             
             App.Logger.WriteLine(LOG_IDENT, "Writing AppSettings.xml...");
@@ -1029,6 +1032,7 @@ namespace Bloxstrap
                         Frontend.ShowConnectivityDialog(
                             Strings.Dialog_Connectivity_UnableToDownload,
                             String.Format(Strings.Dialog_Connectivity_UnableToDownloadReason, "[https://github.com/pizzaboxer/bloxstrap/wiki/Bloxstrap-is-unable-to-download-Roblox](https://github.com/pizzaboxer/bloxstrap/wiki/Bloxstrap-is-unable-to-download-Roblox)"),
+                            MessageBoxImage.Error,
                             ex
                         );
 
