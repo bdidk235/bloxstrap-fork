@@ -66,6 +66,15 @@ namespace Bloxstrap
             Environment.Exit(exitCodeNum);
         }
 
+        public static void SoftTerminate(ErrorCode exitCode = ErrorCode.ERROR_SUCCESS)
+        {
+            int exitCodeNum = (int)exitCode;
+
+            Logger.WriteLine("App::SoftTerminate", $"Terminating with exit code {exitCodeNum} ({exitCode})");
+
+            Current.Dispatcher.Invoke(() => Current.Shutdown(exitCodeNum));
+        }
+
         void GlobalExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
@@ -132,10 +141,22 @@ namespace Bloxstrap
 
             Logger.WriteLine(LOG_IDENT, $"Starting {ProjectName} v{Version}");
 
+            string userAgent = $"{ProjectName}/{Version}";
+
             if (IsActionBuild)
+            {
                 Logger.WriteLine(LOG_IDENT, $"Compiled {BuildMetadata.Timestamp.ToFriendlyString()} from commit {BuildMetadata.CommitHash} ({BuildMetadata.CommitRef})");
+
+                if (IsProductionBuild)
+                    userAgent += $" (Production)";
+                else
+                    userAgent += $" (Artifact {BuildMetadata.CommitHash}, {BuildMetadata.CommitRef})";
+            }
             else
+            {
                 Logger.WriteLine(LOG_IDENT, $"Compiled {BuildMetadata.Timestamp.ToFriendlyString()} from {BuildMetadata.Machine}");
+                userAgent += $" (Build {BuildMetadata.Machine})";
+            }
 
             Logger.WriteLine(LOG_IDENT, $"Loaded from {Paths.Process}");
 
@@ -144,7 +165,7 @@ namespace Bloxstrap
             ApplicationConfiguration.Initialize();
 
             HttpClient.Timeout = TimeSpan.FromSeconds(30);
-            HttpClient.DefaultRequestHeaders.Add("User-Agent", ProjectRepository);
+            HttpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
 
             LaunchSettings = new LaunchSettings(e.Args);
 

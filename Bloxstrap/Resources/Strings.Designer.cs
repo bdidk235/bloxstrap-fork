@@ -79,6 +79,24 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Monthly.
+        /// </summary>
+        public static string About_Supporters_Monthly {
+            get {
+                return ResourceManager.GetString("About.Supporters.Monthly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One-off.
+        /// </summary>
+        public static string About_Supporters_OneOff {
+            get {
+                return ResourceManager.GetString("About.Supporters.OneOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Supporters.
         /// </summary>
         public static string About_Supporters_Title {
@@ -106,7 +124,7 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to query server location..
+        ///   Looks up a localized string similar to The server location could not be queried. You may be joining games too quickly..
         /// </summary>
         public static string ActivityWatcher_LocationQueryFailed {
             get {
@@ -160,13 +178,11 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Roblox has now finished rolling out the new game client update, featuring 64-bit support and the Hyperion anticheat. ReShade does not work with this update, and so it has now been disabled and removed from Bloxstrap.
-        ///
-        ///Your ReShade configuration files will still be saved, and you can locate them by opening the folder where Bloxstrap is installed to, and navigating to the Integrations folder. You can choose to delete these if you want..
+        ///   Looks up a localized string similar to Failed to save {0}: {1}.
         /// </summary>
-        public static string Bootstrapper_HyperionUpdateInfo {
+        public static string Bootstrapper_JsonManagerSaveFailed {
             get {
-                return ResourceManager.GetString("Bootstrapper.HyperionUpdateInfo", resourceCulture);
+                return ResourceManager.GetString("Bootstrapper.JsonManagerSaveFailed", resourceCulture);
             }
         }
         
@@ -513,6 +529,15 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not available.
+        /// </summary>
+        public static string Common_NotAvailable {
+            get {
+                return ResourceManager.GetString("Common.NotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string Common_OK {
@@ -545,6 +570,15 @@ namespace Bloxstrap.Resources {
         public static string Common_Reset {
             get {
                 return ResourceManager.GetString("Common.Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Roblox has not yet been installed. Please launch Roblox using Bloxstrap at least once before trying to use this option..
+        /// </summary>
+        public static string Common_RobloxNotInstalled {
+            get {
+                return ResourceManager.GetString("Common.RobloxNotInstalled", resourceCulture);
             }
         }
         
@@ -950,6 +984,17 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The chosen bootstrapper icon could not be loaded.
+        ///
+        ///{0}.
+        /// </summary>
+        public static string Dialog_IconLoadFailed {
+            get {
+                return ResourceManager.GetString("Dialog.IconLoadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Choose preferred language.
         /// </summary>
         public static string Dialog_LanguageSelector_Header {
@@ -991,6 +1036,15 @@ namespace Bloxstrap.Resources {
         public static string Dialog_PlayerError_HelpInformation {
             get {
                 return ResourceManager.GetString("Dialog.PlayerError.HelpInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bloxstrap is unable to write to the Windows Registry. An antivirus is likely interfering and causing issues. Please check to make sure there isn&apos;t anything that would restrict Bloxstrap&apos;s operation..
+        /// </summary>
+        public static string Dialog_RegistryWriteError {
+            get {
+                return ResourceManager.GetString("Dialog.RegistryWriteError", resourceCulture);
             }
         }
         
@@ -1499,6 +1553,15 @@ namespace Bloxstrap.Resources {
         public static string Installer_Install_Title {
             get {
                 return ResourceManager.GetString("Installer.Install.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to cancel the installation?.
+        /// </summary>
+        public static string Installer_ShouldCancel {
+            get {
+                return ResourceManager.GetString("Installer.ShouldCancel", resourceCulture);
             }
         }
         
@@ -2756,6 +2819,24 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shows the Roblox account you&apos;re playing with on your Discord profile..
+        /// </summary>
+        public static string Menu_Integrations_ShowAccountOnProfile_Description {
+            get {
+                return ResourceManager.GetString("Menu.Integrations.ShowAccountOnProfile.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Roblox account.
+        /// </summary>
+        public static string Menu_Integrations_ShowAccountOnProfile_Title {
+            get {
+                return ResourceManager.GetString("Menu.Integrations.ShowAccountOnProfile.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Roblox game you&apos;re playing will be shown on your Discord profile. [Not working?]({0}).
         /// </summary>
         public static string Menu_Integrations_ShowGameActivity_Description {
@@ -2797,6 +2878,24 @@ namespace Bloxstrap.Resources {
         public static string Menu_Mods_Help_Description {
             get {
                 return ResourceManager.GetString("Menu.Mods.Help.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure application parameters such as DPI scaling behaviour and [fullscreen optimizations]({0})..
+        /// </summary>
+        public static string Menu_Mods_Misc_CompatibilitySettings_Description {
+            get {
+                return ResourceManager.GetString("Menu.Mods.Misc.CompatibilitySettings.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage compatibility settings.
+        /// </summary>
+        public static string Menu_Mods_Misc_CompatibilitySettings_Title {
+            get {
+                return ResourceManager.GetString("Menu.Mods.Misc.CompatibilitySettings.Title", resourceCulture);
             }
         }
         
@@ -2891,9 +2990,7 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The emoji mod could not be applied because of a network error during download.
-        ///
-        ///{0}.
+        ///   Looks up a localized string similar to The emoji mod can not be applied at this time..
         /// </summary>
         public static string Menu_Mods_Presets_EmojiType_Error {
             get {
@@ -3033,6 +3130,24 @@ namespace Bloxstrap.Resources {
         public static string Menu_Shortcuts_Description {
             get {
                 return ResourceManager.GetString("Menu.Shortcuts.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To use for your shortcuts, right-click it, open properties, change icon, browse, and pick from the Icons folder..
+        /// </summary>
+        public static string Menu_Shortcuts_ExtractIcons_Description {
+            get {
+                return ResourceManager.GetString("Menu.Shortcuts.ExtractIcons.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extract Roblox icons to folder.
+        /// </summary>
+        public static string Menu_Shortcuts_ExtractIcons_Title {
+            get {
+                return ResourceManager.GetString("Menu.Shortcuts.ExtractIcons.Title", resourceCulture);
             }
         }
         

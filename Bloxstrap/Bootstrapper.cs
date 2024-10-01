@@ -136,10 +136,6 @@ namespace Bloxstrap
 
             App.Logger.WriteLine(LOG_IDENT, "Running bootstrapper");
 
-            // connectivity check
-
-            App.Logger.WriteLine(LOG_IDENT, "Performing connectivity check...");
-
             SetStatus(Strings.Bootstrapper_Status_Connecting);
 
             var connectionResult = await RobloxDeployment.InitializeConnectivity();
@@ -147,9 +143,7 @@ namespace Bloxstrap
             App.Logger.WriteLine(LOG_IDENT, "Connectivity check finished");
 
             if (connectionResult is not null)
-            {
                 HandleConnectionError(connectionResult);
-            }
             
 #if !DEBUG || DEBUG_UPDATER
             if (App.Settings.Prop.CheckForUpdates && !App.LaunchSettings.UpgradeFlag.Active)
@@ -276,7 +270,7 @@ namespace Bloxstrap
                 clientVersion = await RobloxDeployment.GetInfo(channel, AppData.BinaryType);
             }
 
-            key.SetValue("www.roblox.com", channel);
+            key.SetValueSafe("www.roblox.com", channel);
 
             _latestVersionGuid = clientVersion.VersionGuid;
 
@@ -748,7 +742,7 @@ namespace Bloxstrap
 
             using (var uninstallKey = Registry.CurrentUser.CreateSubKey(App.UninstallKey))
             {
-                uninstallKey.SetValue("EstimatedSize", totalSize);
+                uninstallKey.SetValueSafe("EstimatedSize", totalSize);
             }
 
             App.Logger.WriteLine(LOG_IDENT, $"Registered as {totalSize} KB");
@@ -777,13 +771,13 @@ namespace Bloxstrap
 
             List<string> modFolderFiles = new();
 
-            if (!Directory.Exists(Paths.PlayerModifications))
-                Directory.CreateDirectory(Paths.PlayerModifications);
+            Directory.CreateDirectory(Paths.PlayerModifications);
+            Directory.CreateDirectory(Paths.StudioModifications);
 
             // check custom font mod
             // instead of replacing the fonts themselves, we'll just alter the font family manifests
 
-            string modFontFamiliesFolder = Path.Combine(Paths.PlayerModifications, "content\\fonts\\families");
+            string modFontFamiliesFolder = Path.Combine(_playerModFolder, "content\\fonts\\families");
 
             if (File.Exists(Paths.CustomFont))
             {
@@ -975,6 +969,9 @@ namespace Bloxstrap
 
             const int maxTries = 5;
 
+            bool statIsRetrying = false;
+            bool statIsHttp = false;
+
             App.Logger.WriteLine(LOG_IDENT, "Downloading...");
 
             var buffer = new byte[4096];
@@ -1027,8 +1024,12 @@ namespace Bloxstrap
                     App.Logger.WriteLine(LOG_IDENT, $"An exception occurred after downloading {totalBytesRead} bytes. ({i}/{maxTries})");
                     App.Logger.WriteException(LOG_IDENT, ex);
 
+                    statIsRetrying = true;
+
                     if (ex.GetType() == typeof(ChecksumFailedException))
                     {
+                        _ = App.HttpClient.GetAsync($"https://bloxstraplabs.com/metrics/post?key=packageDownloadState&value=httpFail");
+
                         Frontend.ShowConnectivityDialog(
                             Strings.Dialog_Connectivity_UnableToDownload,
                             String.Format(Strings.Dialog_Connectivity_UnableToDownloadReason, "[https://github.com/pizzaboxer/bloxstrap/wiki/Bloxstrap-is-unable-to-download-Roblox](https://github.com/pizzaboxer/bloxstrap/wiki/Bloxstrap-is-unable-to-download-Roblox)"),
@@ -1054,8 +1055,15 @@ namespace Bloxstrap
                     {
                         App.Logger.WriteLine(LOG_IDENT, "Retrying download over HTTP...");
                         packageUrl = packageUrl.Replace("https://", "http://");
+                        statIsHttp = true;
                     }
                 }
+            }
+
+            if (statIsRetrying)
+            {
+                string stat = statIsHttp ? "httpSuccess" : "retrySuccess";
+                _ = App.HttpClient.GetAsync($"https://bloxstraplabs.com/metrics/post?key=packageDownloadState&value={stat}");
             }
         }
 

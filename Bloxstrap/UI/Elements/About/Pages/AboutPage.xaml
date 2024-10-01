@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:enums="clr-namespace:Bloxstrap.Enums"
       xmlns:models="clr-namespace:Bloxstrap.UI.ViewModels"
       xmlns:dmodels="clr-namespace:Bloxstrap.UI.ViewModels.About"
       xmlns:controls="clr-namespace:Bloxstrap.UI.Elements.Controls"
@@ -81,85 +80,6 @@
             </Grid>
         </StackPanel>
 
-        <TextBlock Text="{x:Static resources:Strings.About_Supporters_Title}" FontWeight="Medium" FontSize="20" Margin="0,16,0,0" />
-        <controls:MarkdownTextBlock MarkdownText="{Binding Source={x:Static resources:Strings.About_Supporters_Description}, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://ko-fi.com/boxerpizza'}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-        <Grid Margin="0,8,0,0">
-            <Grid.Style>
-                <Style TargetType="Grid">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding SupportersLoadedState, Mode=OneWay}" Value="{x:Static enums:GenericTriState.Unknown}">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                    <Setter Property="Visibility" Value="Collapsed" />
-                </Style>
-            </Grid.Style>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <ui:ProgressRing Grid.Column="0" IsIndeterminate="True" />
-            <TextBlock Grid.Column="1" Margin="16,0,0,0" Text="{x:Static resources:Strings.Common_Loading}" VerticalAlignment="Center" />
-        </Grid>
-        <Grid Margin="0,8,0,0">
-            <Grid.Style>
-                <Style TargetType="Grid">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding SupportersLoadedState, Mode=OneWay}" Value="{x:Static enums:GenericTriState.Failed}">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                    <Setter Property="Visibility" Value="Collapsed" />
-                </Style>
-            </Grid.Style>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Image Source="pack://application:,,,/Resources/MessageBox/Error.png" Width="60" Height="60" RenderOptions.BitmapScalingMode="HighQuality" />
-            <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="{x:Static resources:Strings.Common_NetworkError}" />
-                <TextBlock Text="{Binding SupportersLoadError, Mode=OneWay}" />
-            </StackPanel>
-        </Grid>
-        <ListView ItemsSource="{Binding Supporters, Mode=OneWay}" Margin="0,8,0,0" ScrollViewer.CanContentScroll="False" IsEnabled="False">
-            <ListView.Style>
-                <Style TargetType="ListView" BasedOn="{StaticResource {x:Type ListView}}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding SupportersLoadedState, Mode=OneWay}" Value="{x:Static enums:GenericTriState.Successful}">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                    <Setter Property="Visibility" Value="Collapsed" />
-                </Style>
-            </ListView.Style>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ui:Card Padding="8">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            
-                            <Ellipse Grid.Column="0" Height="32" Width="32" VerticalAlignment="Center">
-                                <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding Image, IsAsync=True}" />
-                                </Ellipse.Fill>
-                            </Ellipse>
-
-                            <TextBlock Grid.Column="1" Margin="8,0,2,0" VerticalAlignment="Center" Text="{Binding Name}" />
-                        </Grid>
-                    </ui:Card>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="{Binding SupporterColumns}" Margin="-4" />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-        </ListView>
-
         <TextBlock Text="{x:Static resources:Strings.Menu_About_Contributors}" FontWeight="Medium" FontSize="20" Margin="0,16,0,0" />
         <TextBlock Text="{x:Static resources:Strings.Menu_About_Contributors_Description}" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
         <Grid Margin="0,8,0,0">
@@ -172,6 +92,7 @@
             <controls:Expander Grid.Column="0" Margin="0,0,4,0" HeaderIcon="Code24" HeaderText="{x:Static resources:Strings.Menu_About_Contributors_Code}" IsExpanded="True">
                 <StackPanel>
                     <controls:MarkdownTextBlock MarkdownText="[Matt](https://github.com/bluepilledgreat)" />
+                    <controls:MarkdownTextBlock MarkdownText="[lolmanurfunny](https://github.com/lolmanurfunny)" />
                     <controls:MarkdownTextBlock MarkdownText="[1011025m](https://github.com/1011025m)" />
                     <controls:MarkdownTextBlock MarkdownText="[EasternBloxxer](https://github.com/EasternBloxxer)" />
                     <controls:MarkdownTextBlock MarkdownText="[sitiom](https://github.com/sitiom)" />
@@ -181,6 +102,7 @@
                     <controls:MarkdownTextBlock MarkdownText="[fxeP1](https://github.com/fxeP1)" />
                     <controls:MarkdownTextBlock MarkdownText="[Redusofficial](https://github.com/Redusofficial)" />
                     <controls:MarkdownTextBlock MarkdownText="[srthMD](https://github.com/srthMD)" />
+                    <controls:MarkdownTextBlock MarkdownText="[axellse](https://github.com/axellse)" />
                 </StackPanel>
             </controls:Expander>
 
@@ -212,7 +134,7 @@
                     <controls:MarkdownTextBlock MarkdownText="[MaximumADHD](https://github.com/MaximumADHD)" />
                     <controls:MarkdownTextBlock MarkdownText="[Multako](https://www.roblox.com/users/2485612194/profile)" />
                     <controls:MarkdownTextBlock MarkdownText="[axstin](https://github.com/axstin)" />
-                    <controls:MarkdownTextBlock MarkdownText="[taskmanager](https://github.com/Mantaraix)" />
+                    <controls:MarkdownTextBlock MarkdownText="[Mantaraix](https://github.com/Mantaraix)" />
                     <controls:MarkdownTextBlock MarkdownText="[apprehensions](https://github.com/apprehensions)" />
                 </StackPanel>
             </controls:Expander>
