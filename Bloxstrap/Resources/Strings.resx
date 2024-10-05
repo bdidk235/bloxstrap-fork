@@ -537,7 +537,7 @@ Would you like to upgrade your currently installed version?</value>
     <value>Prompt to confirm when launching another Roblox instance</value>
   </data>
   <data name="Menu.Behaviour.Description" xml:space="preserve">
-    <value>Configure what Bloxstrap should do when launching.</value>
+    <value>Configure what Bloxstrap should do when launching Roblox.</value>
   </data>
   <data name="Menu.Behaviour.ForceRobloxReinstall.Description" xml:space="preserve">
     <value>Roblox will be installed fresh on next launch.</value>
@@ -546,7 +546,7 @@ Would you like to upgrade your currently installed version?</value>
     <value>Force Roblox reinstallation</value>
   </data>
   <data name="Menu.Behaviour.Title" xml:space="preserve">
-    <value>Behaviour</value>
+    <value>Bootstrapper</value>
   </data>
   <data name="Menu.FastFlagEditor.AddNew" xml:space="preserve">
     <value>Add new</value>
@@ -1009,7 +1009,7 @@ This installation process will be quick and simple, and you will be able to conf
 
 Roblox has not yet been installed, that will happen when you launch it with Bloxstrap for the first time. However, before you do that, you may want to configure Bloxstrap's settings first.
 
-Also, to keep Bloxstrap registered as the website launch handler, avoid using the "Roblox Player" shortcut to launch Roblox. If you don't see Bloxstrap show when launching from the website, simply launch Roblox with Bloxstrap once from the desktop to fix it.
+Also, avoid using the "Roblox Player" shortcut to launch Roblox, as Bloxstrap won't launch with Roblox. If you don't see Bloxstrap show when launching from the website, simply launch Roblox with Bloxstrap once from the desktop to fix it.
 
 What would you like to do?</value>
   </data>
@@ -1159,7 +1159,7 @@ Are you sure you want to continue?</value>
     <value>Your current game will not show on your Discord presence because an error occurred when loading the game information.</value>
   </data>
   <data name="ContextMenu.GameHistory.Description" xml:space="preserve">
-    <value>Game history is only recorded for your current Roblox session. Games will appear here as you leave them or teleport within them.</value>
+    <value>Game history is only recorded for your current Roblox session. Games will appear here as you leave them or teleport within them. Not all servers will be rejoinable.</value>
   </data>
   <data name="ActivityWatcher.LocationQueryFailed" xml:space="preserve">
     <value>The server location could not be queried. You may be joining games too quickly.</value>
@@ -1218,5 +1218,33 @@ Please manually delete Bloxstrap.exe from the install location or try restarting
   </data>
   <data name="About.Supporters.OneOff" xml:space="preserve">
     <value>One-off</value>
+  </data>
+  <data name="Menu.Bloxstrap.Description" xml:space="preserve">
+    <value>Configure options related to Bloxstrap's behaviour itself.</value>
+  </data>
+  <data name="Menu.Bloxstrap.Analytics.Title" xml:space="preserve">
+    <value>Enable sending of analytics</value>
+  </data>
+  <data name="Menu.Bloxstrap.Analytics.Description" xml:space="preserve">
+    <value>It's anonymous and nothing evil, promise. For insight on what we collect and why, see our [privacy policy]({0}).</value>
+  </data>
+  <data name="Common.Analytics" xml:space="preserve">
+    <value>Analytics</value>
+  </data>
+  <data name="Menu.FastFlags.Reset.Title" xml:space="preserve">
+    <value>Reset everything to defaults</value>
+  </data>
+  <data name="Dialog.Exception.Report" xml:space="preserve">
+    <value>Report exception</value>
+  </data>
+  <data name="Menu.TestMode" xml:space="preserve">
+    <value>Test mode</value>
+  </data>
+  <data name="Menu.TestMode.Prompt" xml:space="preserve">
+    <value>Test mode makes it easier to iteratively test how your settings affect Roblox. 
+
+While enabled, it will automatically launch Roblox after closing Settings, and reopen Settings after closing Roblox, in a cycle until you disable it.
+
+Would you like to enable test mode?</value>
   </data>
 </root>

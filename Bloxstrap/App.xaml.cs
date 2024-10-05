@@ -131,6 +131,21 @@ namespace Bloxstrap
             return null;
         }
 
+        public static async void SendStat(string key, string value)
+        {
+            if (!Settings.Prop.EnableAnalytics)
+                return;
+
+            try
+            {
+                await HttpClient.GetAsync($"https://bloxstraplabs.com/metrics/post?key={key}&value={value}");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteException("App::SendStat", ex);
+            }
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             const string LOG_IDENT = "App::OnStartup";
@@ -159,6 +174,8 @@ namespace Bloxstrap
             }
 
             Logger.WriteLine(LOG_IDENT, $"Loaded from {Paths.Process}");
+            Logger.WriteLine(LOG_IDENT, $"Temp path is {Paths.Temp}");
+            Logger.WriteLine(LOG_IDENT, $"WindowsStartMenu path is {Paths.WindowsStartMenu}");
 
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.

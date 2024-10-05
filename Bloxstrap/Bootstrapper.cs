@@ -17,6 +17,10 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 
 using Bloxstrap.AppData;
+using System.Windows.Shell;
+using Bloxstrap.UI.Elements.Bootstrapper.Base;
+
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace Bloxstrap
 {
@@ -24,7 +28,10 @@ namespace Bloxstrap
     {
         #region Properties
         private const int ProgressBarMaximum = 10000;
-      
+
+        private const double TaskbarProgressMaximumWpf = 1; // this can not be changed. keep it at 1.
+        private const int TaskbarProgressMaximumWinForms = WinFormsDialogBase.TaskbarProgressMaximum;
+
         private const string AppSettings =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
             "<Settings>\r\n" +
@@ -32,12 +39,13 @@ namespace Bloxstrap
             "	<BaseUrl>http://www.roblox.com</BaseUrl>\r\n" +
             "</Settings>\r\n";
 
+        private readonly FastZipEvents _fastZipEvents = new();
         private readonly CancellationTokenSource _cancelTokenSource = new();
 
         private readonly IAppData AppData;
+        private readonly LaunchMode _launchMode;
 
         private string _launchCommandLine = App.LaunchSettings.RobloxLaunchArgs;
-        private LaunchMode _launchMode = App.LaunchSettings.RobloxLaunchMode;
         private string _playerModFolder => _launchMode == LaunchMode.Studio ? Paths.StudioModifications : Paths.PlayerModifications;
 
         private List<string> _modManifest
@@ -61,10 +69,14 @@ namespace Bloxstrap
 
         private bool _isInstalling = false;
         private double _progressIncrement;
+        private double _taskbarProgressIncrement;
+        private double _taskbarProgressMaximum;
         private long _totalDownloadedBytes = 0;
 
         private bool _mustUpgrade => String.IsNullOrEmpty(AppData.State.VersionGuid) || File.Exists(AppData.LockFilePath) || !File.Exists(AppData.ExecutablePath);
         private bool _noConnection = false;
+
+        private int _appPid = 0;
 
         public IBootstrapperDialog? Dialog = null;
 
@@ -72,8 +84,20 @@ namespace Bloxstrap
         #endregion
 
         #region Core
-        public Bootstrapper()
+        public Bootstrapper(LaunchMode launchMode)
         {
+            _launchMode = launchMode;
+
+            // this is now always enabled as of v2.8.0
+            if (Dialog is not null)
+                Dialog.CancelEnabled = true;
+
+            // https://github.com/icsharpcode/SharpZipLib/blob/master/src/ICSharpCode.SharpZipLib/Zip/FastZip.cs/#L669-L680
+            // exceptions don't get thrown if we define events without actually binding to the failure events. probably a bug. ¯\_(ツ)_/¯
+            _fastZipEvents.FileFailure += (_, e) => throw e.Exception;
+            _fastZipEvents.DirectoryFailure += (_, e) => throw e.Exception;
+            _fastZipEvents.ProcessFile += (_, e) => e.ContinueRunning = !_cancelTokenSource.IsCancellationRequested;
+
             AppData = IsStudioLaunch ? new RobloxStudioData() : new RobloxPlayerData();
         }
 
@@ -92,6 +116,7 @@ namespace Bloxstrap
             if (Dialog is null)
                 return;
 
+            // UI progress
             int progressValue = (int)Math.Floor(_progressIncrement * _totalDownloadedBytes);
 
             // bugcheck: if we're restoring a file from a package, it'll incorrectly increment the progress beyond 100
@@ -99,6 +124,12 @@ namespace Bloxstrap
             progressValue = Math.Clamp(progressValue, 0, ProgressBarMaximum);
 
             Dialog.ProgressValue = progressValue;
+
+            // taskbar progress
+            double taskbarProgressValue = _taskbarProgressIncrement * _totalDownloadedBytes;
+            taskbarProgressValue = Math.Clamp(taskbarProgressValue, 0, _taskbarProgressMaximum);
+
+            Dialog.TaskbarProgressValue = taskbarProgressValue;
         }
 
         private void HandleConnectionError(Exception exception)
@@ -200,6 +231,9 @@ namespace Bloxstrap
                 if (AppData.State.VersionGuid != _latestVersionGuid || _mustUpgrade)
                     await UpgradeRoblox();
 
+                if (_cancelTokenSource.IsCancellationRequested)
+                    return;
+
                 // we require deployment details for applying modifications for a worst case scenario,
                 // where we'd need to restore files from a package that isn't present on disk and needs to be redownloaded
                 await ApplyModifications();
@@ -242,6 +276,9 @@ namespace Bloxstrap
             {
                 channel = value;
             }
+
+            if (channel != "production")
+                App.SendStat("robloxChannel", channel);
 
             ClientVersion clientVersion;
 
@@ -315,7 +352,6 @@ namespace Bloxstrap
                 return;
             }
 
-            int gameClientPid;
             bool startEventSignalled;
 
             // TODO: figure out why this is causing roblox to block for some users
@@ -324,12 +360,19 @@ namespace Bloxstrap
                 startEvent.Reset();
 
                 // v2.2.0 - byfron will trip if we keep a process handle open for over a minute, so we're doing this now
-                using (var process = Process.Start(startInfo)!)
+                try
                 {
-                    gameClientPid = process.Id;
+                    using var process = Process.Start(startInfo)!;
+                    _appPid = process.Id;
+                }
+                catch (Exception)
+                {
+                    // attempt a reinstall on next launch
+                    File.Delete(AppData.ExecutablePath);
+                    throw;
                 }
 
-                App.Logger.WriteLine(LOG_IDENT, $"Started Roblox (PID {gameClientPid}), waiting for start event");
+                App.Logger.WriteLine(LOG_IDENT, $"Started Roblox (PID {_appPid}), waiting for start event");
 
                 startEventSignalled = startEvent.WaitOne(TimeSpan.FromSeconds(30));
             }
@@ -353,6 +396,7 @@ namespace Bloxstrap
                 App.Logger.WriteLine(LOG_IDENT, $"Launching custom integration '{integration.Name}' ({integration.Location} {integration.LaunchArgs} - autoclose is {integration.AutoClose})");
 
                 int pid = 0;
+
                 try
                 {
                     var process = Process.Start(new ProcessStartInfo
@@ -375,33 +419,28 @@ namespace Bloxstrap
                     autoclosePids.Add(pid);
             }
 
-            string args = gameClientPid.ToString();
+            string argPids = _appPid.ToString();
 
             if (autoclosePids.Any())
-                args += $";{String.Join(',', autoclosePids)}";
+                argPids += $";{String.Join(',', autoclosePids)}";
 
-            if (App.Settings.Prop.EnableActivityTracking || autoclosePids.Any())
+            if (App.Settings.Prop.EnableActivityTracking || App.LaunchSettings.TestModeFlag.Active || autoclosePids.Any())
             {
                 using var ipl = new InterProcessLock("Watcher", TimeSpan.FromSeconds(5));
 
-                // TODO: look into if this needs to be launched *before* roblox starts
+                string args = $"-watcher \"{argPids}\"";
+
+                if (App.LaunchSettings.TestModeFlag.Active)
+                    args += " -testmode";
+
                 if (ipl.IsAcquired)
-                    Process.Start(Paths.Process, $"-watcher \"{args}\"");
+                    Process.Start(Paths.Process, args);
             }
         }
 
-        // TODO: the bootstrapper dialogs call this function directly.
-        // this should probably be behind an event invocation.
         public void Cancel()
         {
             const string LOG_IDENT = "Bootstrapper::Cancel";
-
-            if (!_isInstalling)
-            {
-                // TODO: this sucks and needs to be done better
-                App.Terminate(ErrorCode.ERROR_CANCELLED);
-                return;
-            }
 
             if (_cancelTokenSource.IsCancellationRequested)
                 return;
@@ -409,6 +448,9 @@ namespace Bloxstrap
             App.Logger.WriteLine(LOG_IDENT, "Cancelling launch...");
 
             _cancelTokenSource.Cancel();
+
+            if (Dialog is not null)
+                Dialog.CancelEnabled = false;
 
             if (_isInstalling)
             {
@@ -422,12 +464,26 @@ namespace Bloxstrap
                 {
                     App.Logger.WriteLine(LOG_IDENT, "Could not fully clean up installation!");
                     App.Logger.WriteException(LOG_IDENT, ex);
+
+                    // assurance to make sure the next launch does a fresh install
+                    // we probably shouldn't be using the lockfile to do this, but meh
+                    var lockFile = new FileInfo(AppData.LockFilePath);
+                    lockFile.Create().Dispose();
                 }
+            }
+            else if (_appPid != 0)
+            {
+                try
+                {
+                    using var process = Process.GetProcessById(_appPid);
+                    process.Kill();
+                }
+                catch (Exception) { }
             }
 
             Dialog?.CloseBootstrapper();
 
-            App.Terminate(ErrorCode.ERROR_CANCELLED);
+            App.SoftTerminate(ErrorCode.ERROR_CANCELLED);
         }
 #endregion
 
@@ -460,6 +516,9 @@ namespace Bloxstrap
                 App.Logger.WriteLine(LOG_IDENT, "No updates found");
                 return false;
             }
+
+            if (Dialog is not null)
+                Dialog.CancelEnabled = false;
 
             string version = releaseInfo.TagName;
 #else
@@ -599,14 +658,21 @@ namespace Bloxstrap
 
             if (Dialog is not null)
             {
-                // TODO: cancelling needs to always be enabled
-                Dialog.CancelEnabled = true;
                 Dialog.ProgressStyle = ProgressBarStyle.Continuous;
+                Dialog.TaskbarProgressState = TaskbarItemProgressState.Normal;
 
                 Dialog.ProgressMaximum = ProgressBarMaximum;
 
                 // compute total bytes to download
-                _progressIncrement = (double)ProgressBarMaximum / _versionPackageManifest.Sum(package => package.PackedSize);
+                int totalPackedSize = _versionPackageManifest.Sum(package => package.PackedSize);
+                _progressIncrement = (double)ProgressBarMaximum / totalPackedSize;
+
+                if (Dialog is WinFormsDialogBase)
+                    _taskbarProgressMaximum = (double)TaskbarProgressMaximumWinForms;
+                else
+                    _taskbarProgressMaximum = (double)TaskbarProgressMaximumWpf;
+
+                _taskbarProgressIncrement = _taskbarProgressMaximum / (double)totalPackedSize;
             }
 
             var extractionTasks = new List<Task>();
@@ -632,11 +698,8 @@ namespace Bloxstrap
 
             if (Dialog is not null)
             {
-                // allow progress bar to 100% before continuing (purely ux reasons lol)
-                // TODO: come up with a better way of handling this that is non-blocking
-                await Task.Delay(1000);
-
                 Dialog.ProgressStyle = ProgressBarStyle.Marquee;
+                Dialog.TaskbarProgressState = TaskbarItemProgressState.Indeterminate;
                 SetStatus(Strings.Bootstrapper_Status_Configuring);
             }
 
@@ -751,9 +814,6 @@ namespace Bloxstrap
 
             lockFile.Delete();
 
-            if (Dialog is not null)
-                Dialog.CancelEnabled = false;
-
             _isInstalling = false;
         }
 
@@ -826,6 +886,9 @@ namespace Bloxstrap
 
             foreach (string file in Directory.GetFiles(_playerModFolder, "*.*", SearchOption.AllDirectories))
             {
+                if (_cancelTokenSource.IsCancellationRequested)
+                    return;
+
                 // get relative directory path
                 string relativeFile = file.Substring(_playerModFolder.Length + 1);
 
@@ -905,6 +968,9 @@ namespace Bloxstrap
 
                 if (package is not null)
                 {
+                    if (_cancelTokenSource.IsCancellationRequested)
+                        return;
+
                     await DownloadPackage(package);
                     ExtractPackage(package, entry.Value);
                 }
@@ -963,9 +1029,6 @@ namespace Bloxstrap
 
             if (File.Exists(package.DownloadPath))
                 return;
-
-            // TODO: telemetry for this. chances are that this is completely unnecessary and that it can be removed.
-            // but, we need to ensure this doesn't work before we can do that.
 
             const int maxTries = 5;
 
@@ -1028,7 +1091,7 @@ namespace Bloxstrap
 
                     if (ex.GetType() == typeof(ChecksumFailedException))
                     {
-                        _ = App.HttpClient.GetAsync($"https://bloxstraplabs.com/metrics/post?key=packageDownloadState&value=httpFail");
+                        App.SendStat("packageDownloadState", "httpFail");
 
                         Frontend.ShowConnectivityDialog(
                             Strings.Dialog_Connectivity_UnableToDownload,
@@ -1061,10 +1124,7 @@ namespace Bloxstrap
             }
 
             if (statIsRetrying)
-            {
-                string stat = statIsHttp ? "httpSuccess" : "retrySuccess";
-                _ = App.HttpClient.GetAsync($"https://bloxstraplabs.com/metrics/post?key=packageDownloadState&value={stat}");
-            }
+                App.SendStat("packageDownloadState", statIsHttp ? "httpSuccess" : "retrySuccess");
         }
 
         private void ExtractPackage(Package package, List<string>? files = null)
@@ -1074,7 +1134,7 @@ namespace Bloxstrap
             string packageFolder = Path.Combine(AppData.Directory, AppData.PackageDirectoryMap[package.Name]);
             string? fileFilter = null;
 
-            // for sharpziplib, each file in the filter 
+            // for sharpziplib, each file in the filter needs to be a regex
             if (files is not null)
             {
                 var regexList = new List<string>();
@@ -1087,7 +1147,8 @@ namespace Bloxstrap
 
             App.Logger.WriteLine(LOG_IDENT, $"Extracting {package.Name}...");
 
-            var fastZip = new ICSharpCode.SharpZipLib.Zip.FastZip();
+            var fastZip = new FastZip(_fastZipEvents);
+
             fastZip.ExtractZip(package.DownloadPath, packageFolder, fileFilter);
 
             App.Logger.WriteLine(LOG_IDENT, $"Finished extracting {package.Name}");

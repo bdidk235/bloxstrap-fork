@@ -17,6 +17,8 @@ namespace Bloxstrap
 
         public bool CreateStartMenuShortcuts = true;
 
+        public bool EnableAnalytics = true;
+
         public bool IsImplicitInstall = false;
 
         public string InstallLocationError { get; set; } = "";
@@ -88,10 +90,17 @@ namespace Bloxstrap
             App.State.Load(false);
             App.FastFlags.Load(false);
 
+            App.Settings.Prop.EnableAnalytics = EnableAnalytics;
+
             if (!String.IsNullOrEmpty(App.State.Prop.Studio.VersionGuid))
                 WindowsRegistry.RegisterStudio();
 
+            App.Settings.Save();
+
             App.Logger.WriteLine(LOG_IDENT, "Installation finished");
+
+            if (!IsImplicitInstall)
+                App.SendStat("installAction", "install");
         }
 
         private bool ValidateLocation()
@@ -342,6 +351,8 @@ namespace Bloxstrap
                     WindowStyle = ProcessWindowStyle.Hidden
                 });
             }
+
+            App.SendStat("installAction", "uninstall");
         }
 
         public static void HandleUpgrade()
@@ -544,9 +555,16 @@ namespace Bloxstrap
                     if (oldV2Val is not null)
                     {
                         if (oldV2Val == "True")
+                        {
                             App.FastFlags.SetPreset("UI.Menu.Style.V2Rollout", "0");
+
+                            if (App.FastFlags.GetValue("UI.Menu.Style.EnableV4.1") == "False")
+                                App.FastFlags.SetPreset("UI.Menu.Style.ReportButtonCutOff", "False");
+                        }
                         else
+                        {
                             App.FastFlags.SetPreset("UI.Menu.Style.V2Rollout", "100");
+                        }
 
                         App.FastFlags.SetValue("FFlagDisableNewIGMinDUA", null);
                     }
@@ -562,6 +580,8 @@ namespace Bloxstrap
 
             if (currentVer is null)
                 return;
+
+            App.SendStat("installAction", "upgrade");
 
             if (isAutoUpgrade)
             {

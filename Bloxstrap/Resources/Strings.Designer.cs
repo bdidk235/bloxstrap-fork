@@ -358,6 +358,15 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Analytics.
+        /// </summary>
+        public static string Common_Analytics {
+            get {
+                return ResourceManager.GetString("Common.Analytics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automatic.
         /// </summary>
         public static string Common_Automatic {
@@ -673,7 +682,7 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Game history is only recorded for your current Roblox session. Games will appear here as you leave them or teleport within them..
+        ///   Looks up a localized string similar to Game history is only recorded for your current Roblox session. Games will appear here as you leave them or teleport within them. Not all servers will be rejoinable..
         /// </summary>
         public static string ContextMenu_GameHistory_Description {
             get {
@@ -971,6 +980,15 @@ namespace Bloxstrap.Resources {
         public static string Dialog_Exception_Info_2_Alt {
             get {
                 return ResourceManager.GetString("Dialog.Exception.Info.2.Alt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report exception.
+        /// </summary>
+        public static string Dialog_Exception_Report {
+            get {
+                return ResourceManager.GetString("Dialog.Exception.Report", resourceCulture);
             }
         }
         
@@ -1481,9 +1499,9 @@ namespace Bloxstrap.Resources {
         ///
         ///Roblox has not yet been installed, that will happen when you launch it with Bloxstrap for the first time. However, before you do that, you may want to configure Bloxstrap&apos;s settings first.
         ///
-        ///Also, to keep Bloxstrap registered as the website launch handler, avoid using the &quot;Roblox Player&quot; shortcut to launch Roblox. If you don&apos;t see Bloxstrap show when launching from the website, simply launch Roblox with Bloxstrap once from the desktop to fix it.
+        ///Also, avoid using the &quot;Roblox Player&quot; shortcut to launch Roblox, as Bloxstrap won&apos;t launch with Roblox. If you don&apos;t see Bloxstrap show when launching from the website, simply launch Roblox with Bloxstrap once from the desktop to fix it.
         ///
-        ///What would y [rest of string was truncated]&quot;;.
+        ///What would you like to do?.
         /// </summary>
         public static string Installer_Completion_Text {
             get {
@@ -2056,7 +2074,7 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Configure what Bloxstrap should do when launching..
+        ///   Looks up a localized string similar to Configure what Bloxstrap should do when launching Roblox..
         /// </summary>
         public static string Menu_Behaviour_Description {
             get {
@@ -2101,11 +2119,38 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Behaviour.
+        ///   Looks up a localized string similar to Bootstrapper.
         /// </summary>
         public static string Menu_Behaviour_Title {
             get {
                 return ResourceManager.GetString("Menu.Behaviour.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It&apos;s anonymous and nothing evil, promise. For insight on what we collect and why, see our [privacy policy]({0})..
+        /// </summary>
+        public static string Menu_Bloxstrap_Analytics_Description {
+            get {
+                return ResourceManager.GetString("Menu.Bloxstrap.Analytics.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable sending of analytics.
+        /// </summary>
+        public static string Menu_Bloxstrap_Analytics_Title {
+            get {
+                return ResourceManager.GetString("Menu.Bloxstrap.Analytics.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure options related to Bloxstrap&apos;s behaviour itself..
+        /// </summary>
+        public static string Menu_Bloxstrap_Description {
+            get {
+                return ResourceManager.GetString("Menu.Bloxstrap.Description", resourceCulture);
             }
         }
         
@@ -2575,6 +2620,15 @@ namespace Bloxstrap.Resources {
         public static string Menu_FastFlags_Presets_TextureQuality_Title {
             get {
                 return ResourceManager.GetString("Menu.FastFlags.Presets.TextureQuality.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset everything to defaults.
+        /// </summary>
+        public static string Menu_FastFlags_Reset_Title {
+            get {
+                return ResourceManager.GetString("Menu.FastFlags.Reset.Title", resourceCulture);
             }
         }
         
@@ -3184,6 +3238,28 @@ namespace Bloxstrap.Resources {
         public static string Menu_Shortcuts_General_Title {
             get {
                 return ResourceManager.GetString("Menu.Shortcuts.General.Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test mode.
+        /// </summary>
+        public static string Menu_TestMode {
+            get {
+                return ResourceManager.GetString("Menu.TestMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test mode makes it easier to iteratively test how your settings affect Roblox. 
+        ///
+        ///While enabled, it will automatically launch Roblox after closing Settings, and reopen Settings after closing Roblox, in a cycle until you disable it.
+        ///
+        ///Would you like to enable test mode?.
+        /// </summary>
+        public static string Menu_TestMode_Prompt {
+            get {
+                return ResourceManager.GetString("Menu.TestMode.Prompt", resourceCulture);
             }
         }
         
