@@ -484,6 +484,15 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        public static string Common_Navigation_Install {
+            get {
+                return ResourceManager.GetString("Common.Navigation.Install", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next.
         /// </summary>
         public static string Common_Navigation_Next {
@@ -1184,7 +1193,7 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2022 (V2).
+        ///   Looks up a localized string similar to 2020 (V2).
         /// </summary>
         public static string Enums_FlagPresets_InGameMenuVersion_V2 {
             get {
@@ -2541,7 +2550,7 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fast Flags.
+        ///   Looks up a localized string similar to Engine Settings.
         /// </summary>
         public static string Menu_FastFlags_Title {
             get {

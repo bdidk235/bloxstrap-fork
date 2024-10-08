@@ -566,12 +566,15 @@ namespace Bloxstrap
                             App.FastFlags.SetPreset("UI.Menu.Style.V2Rollout", "100");
                         }
 
+                        if (App.FastFlags.GetPreset("UI.Menu.Style.ABTest.1") is not null)
+                            App.FastFlags.SetPreset("UI.Menu.Style.ABTest", "False");
+
                         App.FastFlags.SetValue("FFlagDisableNewIGMinDUA", null);
                     }
 
                     App.FastFlags.SetValue("FFlagFixGraphicsQuality", null);
 
-                    Directory.Delete(Path.Combine(Paths.Base, "Versions"));
+                    Directory.Delete(Path.Combine(Paths.Base, "Versions"), true);
                 }
 
                 App.Settings.Save();
