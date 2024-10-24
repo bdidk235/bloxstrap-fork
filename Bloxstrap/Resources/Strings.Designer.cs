@@ -975,6 +975,15 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version {0}.
+        /// </summary>
+        public static string Dialog_Exception_Version {
+            get {
+                return ResourceManager.GetString("Dialog.Exception.Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The chosen bootstrapper icon could not be loaded.
         ///
         ///{0}.
@@ -1530,7 +1539,7 @@ namespace Bloxstrap.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Thank you for downloading Bloxstrap. 
         ///
-        ///You should have downloaded it from either {0} or {1}. Those are the only official websites to get it from. It is your responsibility to ensure you download from an official source.
+        ///The only official websites to download Bloxstrap from are {0} and {1}, so please verify that you got it from an official source.
         ///
         ///This installation process will be quick and simple, and you will be able to configure any of Bloxstrap&apos;s settings after installation..
         /// </summary>
@@ -1591,6 +1600,15 @@ namespace Bloxstrap.Resources {
         public static string LaunchMenu_ConfigureSettings {
             get {
                 return ResourceManager.GetString("LaunchMenu.ConfigureSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Support us on Ko-fi!.
+        /// </summary>
+        public static string LaunchMenu_Donate {
+            get {
+                return ResourceManager.GetString("LaunchMenu.Donate", resourceCulture);
             }
         }
         
@@ -3087,7 +3105,7 @@ namespace Bloxstrap.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To use for your shortcuts, right-click it, open properties, change icon, browse, and pick from the Icons folder..
+        ///   Looks up a localized string similar to Allows you to use Bloxstrap&apos;s range of Roblox icons for your shortcuts. [See how.]({0}).
         /// </summary>
         public static string Menu_Shortcuts_ExtractIcons_Description {
             get {
@@ -3177,6 +3195,15 @@ namespace Bloxstrap.Resources {
         public static string Menu_UnsavedChanges {
             get {
                 return ResourceManager.GetString("Menu.UnsavedChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Icons.
+        /// </summary>
+        public static string Paths_Icons {
+            get {
+                return ResourceManager.GetString("Paths.Icons", resourceCulture);
             }
         }
         

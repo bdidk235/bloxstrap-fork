@@ -13,11 +13,12 @@
 
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Shell;
 
 using Microsoft.Win32;
 
 using Bloxstrap.AppData;
-using System.Windows.Shell;
+using Bloxstrap.RobloxInterfaces;
 using Bloxstrap.UI.Elements.Bootstrapper.Base;
 
 using ICSharpCode.SharpZipLib.Zip;
@@ -76,6 +77,8 @@ namespace Bloxstrap
         private bool _mustUpgrade => String.IsNullOrEmpty(AppData.State.VersionGuid) || File.Exists(AppData.LockFilePath) || !File.Exists(AppData.ExecutablePath);
         private bool _noConnection = false;
 
+        private AsyncMutex? _mutex;
+
         private int _appPid = 0;
 
         public IBootstrapperDialog? Dialog = null;
@@ -88,10 +91,6 @@ namespace Bloxstrap
         {
             _launchMode = launchMode;
 
-            // this is now always enabled as of v2.8.0
-            if (Dialog is not null)
-                Dialog.CancelEnabled = true;
-
             // https://github.com/icsharpcode/SharpZipLib/blob/master/src/ICSharpCode.SharpZipLib/Zip/FastZip.cs/#L669-L680
             // exceptions don't get thrown if we define events without actually binding to the failure events. probably a bug. ¯\_(ツ)_/¯
             _fastZipEvents.FileFailure += (_, e) => throw e.Exception;
@@ -99,6 +98,7 @@ namespace Bloxstrap
             _fastZipEvents.ProcessFile += (_, e) => e.ContinueRunning = !_cancelTokenSource.IsCancellationRequested;
 
             AppData = IsStudioLaunch ? new RobloxStudioData() : new RobloxPlayerData();
+            Deployment.BinaryType = AppData.BinaryType;
         }
 
         private void SetStatus(string message)
@@ -134,7 +134,12 @@ namespace Bloxstrap
 
         private void HandleConnectionError(Exception exception)
         {
+            const string LOG_IDENT = "Bootstrapper::HandleConnectionError";
+
             _noConnection = true;
+
+            App.Logger.WriteLine(LOG_IDENT, "Connectivity check failed");
+            App.Logger.WriteException(LOG_IDENT, exception);
 
             string message = Strings.Dialog_Connectivity_Preventing;
 
@@ -167,16 +172,20 @@ namespace Bloxstrap
 
             App.Logger.WriteLine(LOG_IDENT, "Running bootstrapper");
 
+            // this is now always enabled as of v2.8.0
+            if (Dialog is not null)
+                Dialog.CancelEnabled = true;
+
             SetStatus(Strings.Bootstrapper_Status_Connecting);
 
-            var connectionResult = await RobloxDeployment.InitializeConnectivity();
+            var connectionResult = await Deployment.InitializeConnectivity();
 
             App.Logger.WriteLine(LOG_IDENT, "Connectivity check finished");
 
             if (connectionResult is not null)
                 HandleConnectionError(connectionResult);
             
-#if !DEBUG || DEBUG_UPDATER
+#if (!DEBUG || DEBUG_UPDATER) && !QA_BUILD
             if (App.Settings.Prop.CheckForUpdates && !App.LaunchSettings.UpgradeFlag.Active)
             {
                 bool updatePresent = await CheckForUpdates();
@@ -206,6 +215,8 @@ namespace Bloxstrap
             // wait for mutex to be released if it's not yet
             await using var mutex = new AsyncMutex(false, "Bloxstrap-Bootstrapper");
             await mutex.AcquireAsync(_cancelTokenSource.Token);
+
+            _mutex = mutex;
 
             // reload our configs since they've likely changed by now
             if (mutexExists)
@@ -246,10 +257,13 @@ namespace Bloxstrap
             else
                 WindowsRegistry.RegisterPlayer();
 
-            await mutex.ReleaseAsync();
+            if (_launchMode != LaunchMode.Player)
+                await mutex.ReleaseAsync();
 
             if (!App.LaunchSettings.NoLaunchFlag.Active && !_cancelTokenSource.IsCancellationRequested)
                 StartRoblox();
+
+            await mutex.ReleaseAsync();
 
             Dialog?.CloseBootstrapper();
         }
@@ -262,29 +276,29 @@ namespace Bloxstrap
             // if it's set in the launch uri, we need to use it and set the registry key for it
             // else, check if the registry key for it exists, and use it
 
-            string channel = "production";
-
             using var key = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\ROBLOX Corporation\\Environments\\{AppData.RegistryName}\\Channel");
 
             var match = Regex.Match(App.LaunchSettings.RobloxLaunchArgs, "channel:([a-zA-Z0-9-_]+)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
             if (match.Groups.Count == 2)
             {
-                channel = match.Groups[1].Value.ToLowerInvariant();
+                Deployment.Channel = match.Groups[1].Value.ToLowerInvariant();
             }
             else if (key.GetValue("www.roblox.com") is string value && !String.IsNullOrEmpty(value))
             {
-                channel = value;
+                Deployment.Channel = value.ToLowerInvariant();
             }
 
-            if (channel != "production")
-                App.SendStat("robloxChannel", channel);
+            App.Logger.WriteLine(LOG_IDENT, "Got channel as " + (String.IsNullOrEmpty(Deployment.Channel) ? Deployment.DefaultChannel : Deployment.Channel));
+
+            if (Deployment.Channel != "production")
+                App.SendStat("robloxChannel", Deployment.Channel);
 
             ClientVersion clientVersion;
 
             try
             {
-                clientVersion = await RobloxDeployment.GetInfo(channel, AppData.BinaryType);
+                clientVersion = await Deployment.GetInfo();
             }
             catch (HttpRequestException ex)
             {
@@ -293,25 +307,25 @@ namespace Bloxstrap
                     and not HttpStatusCode.NotFound)
                     throw;
 
-                App.Logger.WriteLine(LOG_IDENT, $"Changing channel from {channel} to {RobloxDeployment.DefaultChannel} because HTTP {(int)ex.StatusCode}");
+                App.Logger.WriteLine(LOG_IDENT, $"Changing channel from {Deployment.Channel} to {Deployment.DefaultChannel} because HTTP {(int)ex.StatusCode}");
 
-                channel = RobloxDeployment.DefaultChannel;
-                clientVersion = await RobloxDeployment.GetInfo(channel, AppData.BinaryType);
+                Deployment.Channel = Deployment.DefaultChannel;
+                clientVersion = await Deployment.GetInfo();
             }
 
             if (clientVersion.IsBehindDefaultChannel)
             {
-                App.Logger.WriteLine(LOG_IDENT, $"Changing channel from {channel} to {RobloxDeployment.DefaultChannel} because channel is behind production");
+                App.Logger.WriteLine(LOG_IDENT, $"Changing channel from {Deployment.Channel} to {Deployment.DefaultChannel} because channel is behind production");
 
-                channel = RobloxDeployment.DefaultChannel;
-                clientVersion = await RobloxDeployment.GetInfo(channel, AppData.BinaryType);
+                Deployment.Channel = Deployment.DefaultChannel;
+                clientVersion = await Deployment.GetInfo();
             }
 
-            key.SetValueSafe("www.roblox.com", channel);
+            key.SetValueSafe("www.roblox.com", Deployment.IsDefaultChannel ? "" : Deployment.Channel);
 
             _latestVersionGuid = clientVersion.VersionGuid;
 
-            string pkgManifestUrl = RobloxDeployment.GetLocation($"/{_latestVersionGuid}-rbxPkgManifest.txt");
+            string pkgManifestUrl = Deployment.GetLocation($"/{_latestVersionGuid}-rbxPkgManifest.txt");
             var pkgManifestData = await App.HttpClient.GetStringAsync(pkgManifestUrl);
 
             _versionPackageManifest = new(pkgManifestData);
@@ -352,12 +366,32 @@ namespace Bloxstrap
                 return;
             }
 
-            bool startEventSignalled;
+            string? logFileName = null;
 
-            // TODO: figure out why this is causing roblox to block for some users
             using (var startEvent = new EventWaitHandle(false, EventResetMode.ManualReset, AppData.StartEvent))
             {
                 startEvent.Reset();
+
+                string rbxLogDir = Path.Combine(Paths.LocalAppData, "Roblox\\logs");
+
+                if (!Directory.Exists(rbxLogDir))
+                    Directory.CreateDirectory(rbxLogDir);
+
+                var logWatcher = new FileSystemWatcher()
+                {
+                    Path = rbxLogDir,
+                    Filter = "*.log",
+                    EnableRaisingEvents = true
+                };
+
+                var logCreatedEvent = new AutoResetEvent(false);
+
+                logWatcher.Created += (_, e) =>
+                {
+                    logWatcher.EnableRaisingEvents = false;
+                    logFileName = e.FullPath;
+                    logCreatedEvent.Set();
+                };
 
                 // v2.2.0 - byfron will trip if we keep a process handle open for over a minute, so we're doing this now
                 try
@@ -374,16 +408,26 @@ namespace Bloxstrap
 
                 App.Logger.WriteLine(LOG_IDENT, $"Started Roblox (PID {_appPid}), waiting for start event");
 
-                startEventSignalled = startEvent.WaitOne(TimeSpan.FromSeconds(30));
-            }
+                if (startEvent.WaitOne(TimeSpan.FromSeconds(5)))
+                    App.Logger.WriteLine(LOG_IDENT, "Start event signalled");
+                else
+                   App.Logger.WriteLine(LOG_IDENT, "Start event not signalled, implying successful launch");
 
-            if (!startEventSignalled)
-            {
-                Frontend.ShowPlayerErrorDialog();
-                return;
-            }
+                logCreatedEvent.WaitOne(TimeSpan.FromSeconds(5));
 
-            App.Logger.WriteLine(LOG_IDENT, "Start event signalled");
+                if (String.IsNullOrEmpty(logFileName))
+                {
+                    App.Logger.WriteLine(LOG_IDENT, "Unable to identify log file");
+                    Frontend.ShowPlayerErrorDialog();
+                    return;
+                }
+                else
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Got log file as {logFileName}");
+                }
+
+                _mutex?.ReleaseAsync();
+            }
 
             if (IsStudioLaunch)
                 return;
@@ -412,23 +456,27 @@ namespace Bloxstrap
                 catch (Exception ex)
                 {
                     App.Logger.WriteLine(LOG_IDENT, $"Failed to launch integration '{integration.Name}'!");
-                    App.Logger.WriteLine(LOG_IDENT, $"{ex.Message}");
+                    App.Logger.WriteLine(LOG_IDENT, ex.Message);
                 }
 
                 if (integration.AutoClose && pid != 0)
                     autoclosePids.Add(pid);
             }
 
-            string argPids = _appPid.ToString();
-
-            if (autoclosePids.Any())
-                argPids += $";{String.Join(',', autoclosePids)}";
-
             if (App.Settings.Prop.EnableActivityTracking || App.LaunchSettings.TestModeFlag.Active || autoclosePids.Any())
             {
                 using var ipl = new InterProcessLock("Watcher", TimeSpan.FromSeconds(5));
 
-                string args = $"-watcher \"{argPids}\"";
+                var watcherData = new WatcherData 
+                { 
+                    ProcessId = _appPid, 
+                    LogFile = logFileName, 
+                    AutoclosePids = autoclosePids
+                };
+
+                string watcherDataArg = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(watcherData)));
+
+                string args = $"-watcher \"{watcherDataArg}\"";
 
                 if (App.LaunchSettings.TestModeFlag.Active)
                     args += " -testmode";
@@ -986,7 +1034,7 @@ namespace Bloxstrap
             if (_cancelTokenSource.IsCancellationRequested)
                 return;
 
-            string packageUrl = RobloxDeployment.GetLocation($"/{_latestVersionGuid}-{package.Name}");
+            string packageUrl = Deployment.GetLocation($"/{_latestVersionGuid}-{package.Name}");
             string robloxPackageLocation = Path.Combine(Paths.LocalAppData, "Roblox", "Downloads", package.Signature);
 
             if (File.Exists(package.DownloadPath))
