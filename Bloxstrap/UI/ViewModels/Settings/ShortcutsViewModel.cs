@@ -1,7 +1,4 @@
-﻿using Bloxstrap.Models.SettingTasks;
-using Bloxstrap.Resources;
-
-namespace Bloxstrap.UI.ViewModels.Settings
+﻿namespace Bloxstrap.UI.ViewModels.Settings
 {
     public class ShortcutsViewModel : NotifyPropertyChangedViewModel
     {
@@ -10,6 +7,8 @@ namespace Bloxstrap.UI.ViewModels.Settings
         public ShortcutTask StartMenuIconTask { get; } = new("StartMenu", Paths.WindowsStartMenu, $"{App.ProjectName}.lnk");
 
         public ShortcutTask PlayerIconTask { get; } = new("RobloxPlayer", Paths.Desktop, $"{Strings.LaunchMenu_LaunchRoblox}.lnk", "-player");
+
+        public ShortcutTask StudioIconTask { get; } = new("RobloxStudio", Paths.Desktop, $"{Strings.LaunchMenu_LaunchRobloxStudio}.lnk", "-studio");
 
         public ShortcutTask SettingsIconTask { get; } = new("Settings", Paths.Desktop, $"{Strings.Menu_Title}.lnk", "-settings");
 

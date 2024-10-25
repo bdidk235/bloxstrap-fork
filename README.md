@@ -2,4 +2,4 @@
 
 ## Fork Changes
 * The `Modifications` folder is replaced with `PlayerModifications`, and a `StudioModifications` folder is created. (Only `PlayerModifications` can be modified by Bloxstrap Menu, `StudioModifications` must be modified manually.).
-* Re-enable Studio Features
+* Improved studio support (bloxstraplabs/bloxstrap#3189)
