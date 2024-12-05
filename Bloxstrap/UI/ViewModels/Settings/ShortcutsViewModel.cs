@@ -2,6 +2,8 @@
 {
     public class ShortcutsViewModel : NotifyPropertyChangedViewModel
     {
+        public bool IsStudioOptionVisible => App.IsStudioVisible;
+
         public ShortcutTask DesktopIconTask { get; } = new("Desktop", Paths.Desktop, $"{App.ProjectName}.lnk");
 
         public ShortcutTask StartMenuIconTask { get; } = new("StartMenu", Paths.WindowsStartMenu, $"{App.ProjectName}.lnk");
