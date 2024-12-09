@@ -20,10 +20,10 @@
         public static string Downloads { get; private set; } = "";
         public static string Logs { get; private set; } = "";
         public static string Integrations { get; private set; } = "";
+        public static string Versions { get; private set; } = "";
         public static string Modifications { get; private set; } = "";
         public static string PlayerModifications { get; private set; } = "";
         public static string StudioModifications { get; private set; } = "";
-        public static string Roblox { get; private set; } = "";
 
         public static string Application { get; private set; } = "";
 
@@ -37,10 +37,10 @@
             Downloads = Path.Combine(Base, "Downloads");
             Logs = Path.Combine(Base, "Logs");
             Integrations = Path.Combine(Base, "Integrations");
+            Versions = Path.Combine(Base, "Versions");
             Modifications = Path.Combine(Base, "Modifications");
             PlayerModifications = Path.Combine(Base, "PlayerModifications");
             StudioModifications = Path.Combine(Base, "StudioModifications");
-            Roblox = Path.Combine(Base, "Roblox");
 
             Application = Path.Combine(Base, $"{App.ProjectName}.exe");
         }
