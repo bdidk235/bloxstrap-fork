@@ -709,6 +709,30 @@ namespace Bloxstrap
             }
         }
 
+        private void KillRunningRobloxInDirectory(string path)
+        {
+            const string LOG_IDENT = "Bootstrapper::KillRunningRobloxInDirectory";
+
+            List<Process> processes = new List<Process>();
+            processes.AddRange(Process.GetProcessesByName(IsStudioLaunch ? "RobloxStudioBeta" : "RobloxPlayerBeta"));
+            processes.AddRange(Process.GetProcessesByName("RobloxCrashHandler"));
+
+            foreach (Process process in processes)
+            {
+                try
+                {
+                    string? processPath = process.MainModule?.FileName;
+                    if (processPath != null && processPath.StartsWith(path))
+                        process.Kill();
+                }
+                catch (Exception ex)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Failed to close process {process.Id}");
+                    App.Logger.WriteException(LOG_IDENT, ex);
+                }
+            }
+        }
+
         private async Task UpgradeRoblox()
         {
             const string LOG_IDENT = "Bootstrapper::UpgradeRoblox";
@@ -723,6 +747,22 @@ namespace Bloxstrap
             Directory.CreateDirectory(Paths.Versions);
 
             _isInstalling = true;
+
+            // make sure nothing is running from the latest version directory before deleting the whole directory
+            KillRunningRobloxInDirectory(_latestVersionDirectory);
+
+            if (Directory.Exists(_latestVersionDirectory))
+            {
+                try
+                {
+                    Directory.Delete(_latestVersionDirectory, true);
+                }
+                catch (Exception ex)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, "Failed to delete the latest version directory");
+                    App.Logger.WriteException(LOG_IDENT, ex);
+                }
+            }
 
             Directory.CreateDirectory(_latestVersionDirectory);
 
