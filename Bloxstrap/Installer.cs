@@ -5,6 +5,12 @@ namespace Bloxstrap
 {
     internal class Installer
     {
+        /// <summary>
+        /// Should this version automatically open the release notes page?
+        /// Recommended for major updates only.
+        /// </summary>
+        private const bool OpenReleaseNotes = true;
+
         private static string DesktopShortcut => Path.Combine(Paths.Desktop, $"{App.ProjectName}.lnk");
 
         private static string StartMenuShortcut => Path.Combine(Paths.WindowsStartMenu, $"{App.ProjectName}.lnk");
@@ -593,10 +599,10 @@ namespace Bloxstrap
                         App.RobloxState.Prop.Studio = App.State.Prop.GetDeprecatedStudio()!;
 
                     if (App.State.Prop.GetDeprecatedPlayerModManifest() != null)
-                        App.RobloxState.Prop.ModManifest = App.State.Prop.GetDeprecatedPlayerModManifest()!;
+                        App.RobloxState.Prop.PlayerModManifest = App.State.Prop.GetDeprecatedPlayerModManifest()!;
 
                     if (App.State.Prop.GetDeprecatedStudioModManifest() != null)
-                        App.RobloxState.Prop.ModManifest = App.State.Prop.GetDeprecatedStudioModManifest()!;
+                        App.RobloxState.Prop.StudioModManifest = App.State.Prop.GetDeprecatedStudioModManifest()!;
                 }
 
                 App.Settings.Save();
