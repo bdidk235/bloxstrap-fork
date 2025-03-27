@@ -16,7 +16,7 @@ namespace Bloxstrap.UI.ViewModels.Settings
 {
     public class ModsViewModel : NotifyPropertyChangedViewModel
     {
-        private void OpenModsFolder() => Process.Start("explorer.exe", Paths.PlayerModifications);
+        private void OpenModsFolder() => Process.Start("explorer.exe", Paths.Modifications);
 
         private readonly Dictionary<string, byte[]> FontHeaders = new()
         {

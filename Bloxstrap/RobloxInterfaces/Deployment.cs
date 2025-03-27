@@ -179,15 +179,6 @@
                     clientVersion = await Http.GetJson<ClientVersion>("https://clientsettings.roblox.com" + path);
                 }
 
-                // check if channel is behind LIVE
-                if (!isDefaultChannel)
-                {
-                    var defaultClientVersion = await GetInfo(DefaultChannel);
-
-                    if (Utilities.CompareVersions(clientVersion.Version, defaultClientVersion.Version) == VersionComparison.LessThan)
-                        clientVersion.IsBehindDefaultChannel = true;
-                }
-
                 ClientVersionCache[cacheKey] = clientVersion;
             }
 
