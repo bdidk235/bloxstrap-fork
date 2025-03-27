@@ -618,7 +618,10 @@ namespace Bloxstrap
 
             if (isAutoUpgrade)
             {
-                Utilities.ShellExecute($"https://github.com/{App.ProjectRepository}/wiki/Release-notes-for-Bloxstrap-v{currentVer}");
+#pragma warning disable CS0162 // Unreachable code detected
+                if (OpenReleaseNotes)
+                    Utilities.ShellExecute($"https://github.com/{App.ProjectRepository}/wiki/Release-notes-for-Bloxstrap-v{currentVer}");
+#pragma warning restore CS0162 // Unreachable code detected
             }
             else
             {
